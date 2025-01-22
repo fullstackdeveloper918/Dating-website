@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { ApiService } from 'src/app/core/service/api/api.service';
+import { ApiService } from '../../../core/service/api.service';
+import { HomeService } from 'src/app/core/service/home.service';
 
 @Component({
   selector: 'app-home',
@@ -9,10 +10,10 @@ import { ApiService } from 'src/app/core/service/api/api.service';
 })
 export class HomeComponent {
 
-  constructor(private apiService: ApiService){}
+  constructor(private homeService : HomeService){}
 
   ngOnInit(){
-    this.apiService.getAll('todos').subscribe(response => {
+    this.homeService.getTodo().subscribe(response => {
       console.log(response);
     });
   }

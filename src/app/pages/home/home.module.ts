@@ -5,13 +5,15 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from 'src/app/shared/navbar/navbar.component';
 import { FooterComponent } from 'src/app/shared/footer/footer.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 @NgModule({
   declarations: [
     HomeComponent,
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
+    ProfileComponent
   ],
   imports: [
     CommonModule,
