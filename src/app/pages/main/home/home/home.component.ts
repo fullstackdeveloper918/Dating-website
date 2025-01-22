@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { ApiService } from '../../../core/service/api.service';
+import { ApiService } from '../../../../core/service/api.service';
 import { HomeService } from 'src/app/core/service/home.service';
 
 @Component({

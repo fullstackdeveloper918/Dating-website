@@ -13,7 +13,7 @@ export class LoginComponent {
   goToHome(event: Event) {
     event.preventDefault();  // Prevent form submission reload
     console.log('This is working');
-    this.router.navigate(['/home']);
+    this.router.navigate(['/main']);
   }
 
 }

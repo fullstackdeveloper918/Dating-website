@@ -1,0 +1,55 @@
+<div class=" bg-gray-50 h-screen flex flex-col border-r">
+    <!-- Header -->
+    <div class="p-4 bg-white shadow-md border-b">
+      <h2 class="text-2xl font-bold text-gray-800">Chats</h2>
+    </div>
+  
+    <!-- Search Bar -->
+    <div class="p-4">
+      <input
+        type="text"
+        placeholder="Search chats"
+        class="w-full p-3 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
+      />
+    </div>
+  
+    <!-- Chat List -->
+    <div class="flex-1 overflow-y-auto space-y-1">
+      <!-- Single Chat Item -->
+      <div
+        class="p-4 flex items-center space-x-4 hover:bg-gray-100 cursor-pointer transition duration-200"
+      >
+        <img
+          src="https://via.placeholder.com/150"
+          alt="Avatar"
+          class="w-14 h-14 rounded-full object-cover"
+        />
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold text-gray-800">John Doe</h3>
+          <p class="text-sm text-gray-500 truncate">Hey! How are you?</p>
+        </div>
+        <span class="text-xs text-gray-400">2:30 PM</span>
+      </div>
+  
+      <!-- Another Chat Item -->
+      <div
+        class="p-4 flex items-center space-x-4 hover:bg-gray-100 cursor-pointer transition duration-200"
+      >
+        <img
+          src="https://via.placeholder.com/150"
+          alt="Avatar"
+          class="w-14 h-14 rounded-full object-cover"
+        />
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold text-gray-800">Jane Smith</h3>
+          <p class="text-sm text-gray-500 truncate">
+            Let's catch up later today.
+          </p>
+        </div>
+        <span class="text-xs text-gray-400">12:45 PM</span>
+      </div>
+  
+      <!-- Add more chat items as needed -->
+    </div>
+  </div>
+  
