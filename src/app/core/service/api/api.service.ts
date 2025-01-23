@@ -26,13 +26,15 @@ export class ApiService {
   // POST method - Include body only if provided
   post<T>(endpoint: string, body?: any): Observable<any> {
     const url = `${this.baseUrl}/${endpoint}`;
-    const options: any = { observe: 'response' };  // Ensure full HttpResponse is returned
-
+    // const options: any = { observe: 'response' };  // Ensure full HttpResponse is returned
+    console.log('POST URL:', url);
+  console.log('POST Body:', body);
+  //  debugger;
     if (body) {
-      return this.http.post<T>(url, body, options);
+      return this.http.post<T>(url, body);
     }
 
-    return this.http.post<T>(url, {}, options);  // Empty body for POST
+    return this.http.post<T>(url, {});  // Empty body for POST
   }
 
   // PUT method - Include body only if provided

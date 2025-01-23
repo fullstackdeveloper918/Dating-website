@@ -1,61 +1,77 @@
-<!-- <body> -->
-    <div class="main">
+<div class="main">
     <div class="login-card">
-        <div class="brand">
-            <!-- <div class="brand-logo">
-                <img src="../../../../assets//images/profile.png" />
-            </div> -->
-            <h1>Welcome To Dating App</h1>
-            <p>Enter your credentials to access your account</p>
+      <div class="brand">
+        <h1>Welcome To Dating App</h1>
+        <p>Enter your credentials to access your account</p>
+      </div>
+  
+      <!-- Login Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="login($event)" id="loginForm">
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="name@company.com"
+            formControlName="email"
+            autocomplete="email"
+          />
+          <!-- Error Message for Email -->
+          <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="error">
+            <small *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</small>
+            <small *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email address.</small>
+          </div>
         </div>
-
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    placeholder="name@company.com"
-                    autocomplete="email"
-                >
-                <div class="error" id="emailError"></div>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    placeholder="Enter your password"
-                    autocomplete="current-password"
-                >
-                <div class="error" id="passwordError"></div>
-            </div>
-
-            <div class="remember-forgot">
-                <div class="remember-me">
-                    <input type="checkbox" id="remember">
-                    <label for="remember">Remember me</label>
-                </div>
-                <a [routerLink]="'/reset-password'" class="forgot-password">Forgot password?</a>
-            </div>
-
-            <button type="submit" class="login-btn" id="loginButton" (click)="goToHome($event)">
-                Login in
-            </button>
-        </form>
-
-        <div class="social-login">
-            <p>Or continue with</p>
-            <div class="social-buttons">
-                <div class="social-btn">G</div>
-                <div class="social-btn">A</div>
-                <div class="social-btn">F</div>
-            </div>
+  
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            formControlName="password"
+            autocomplete="current-password"
+          />
+          <!-- Error Message for Password -->
+          <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="error">
+            <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
+            <small *ngIf="loginForm.get('password')?.errors?.['minlength']">
+              Password must be at least 6 characters long.
+            </small>
+          </div>
         </div>
-
-        <div class="signup-link">
-            <p>Don't have an account? <a href="sign-up">Sign up</a></p>
+  
+        <!-- Remember Me and Forgot Password -->
+        <div class="remember-forgot">
+          <div class="remember-me">
+            <input type="checkbox" id="remember" />
+            <label for="remember">Remember me</label>
+          </div>
+          <a [routerLink]="'/reset-password'" class="forgot-password">Forgot password?</a>
         </div>
+  
+        <!-- Submit Button -->
+        <button type="submit" class="login-btn" id="loginButton">
+          Login
+        </button>
+      </form>
+  
+      <!-- Social Login -->
+      <div class="social-login">
+        <p>Or continue with</p>
+        <div class="social-buttons">
+          <div class="social-btn">G</div>
+          <div class="social-btn">A</div>
+          <div class="social-btn">F</div>
+        </div>
+      </div>
+  
+      <!-- Sign Up Link -->
+      <div class="signup-link">
+        <p>Don't have an account? <a [routerLink]="'/sign-up'">Sign up</a></p>
+      </div>
     </div>
-</div>
+  </div>
+  

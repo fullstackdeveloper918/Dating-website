@@ -26,8 +26,10 @@ export class ApiService {
   // POST method - Include body only if provided
   post<T>(endpoint: string, body?: any): Observable<any> {
     const url = `${this.baseUrl}/${endpoint}`;
-    const options: any = { observe: 'response' };  // Ensure full HttpResponse is returned
-
+    const options: any = {
+      headers: { 'Content-Type': 'application/json' }, // Add headers here
+      observe: 'response',
+    };
     if (body) {
       return this.http.post<T>(url, body, options);
     }

@@ -1,24 +1,23 @@
 <div class="main">
     <div class="login-card">
         <div class="brand">
-            <!-- <div class="brand-logo">
-                <img src="../../../../assets//images/profile.png" />
-            </div> -->
             <h1>Welcome To Dating App</h1>
             <p>Enter your credentials to access your account</p>
         </div>
 
-        <form id="loginForm">
-
+        <form [formGroup]="signUpForm">
             <div class="form-group">
                 <label for="username">UserName</label>
                 <input 
-                    type="username" 
+                    type="text" 
                     id="username" 
                     placeholder="User Name"
                     autocomplete="username"
+                    formControlName="userName"
                 >
-                <div class="error" id="usernameError"></div>
+                <div class="error" *ngIf="signUpForm.get('userName')?.invalid && signUpForm.get('userName')?.touched">
+                    User Name is required
+                </div>
             </div>
 
             <div class="form-group">
@@ -28,8 +27,11 @@
                     id="email" 
                     placeholder="name@company.com"
                     autocomplete="email"
+                    formControlName="email"
                 >
-                <div class="error" id="emailError"></div>
+                <div class="error" *ngIf="signUpForm.get('email')?.invalid && signUpForm.get('email')?.touched">
+                    Valid Email is required
+                </div>
             </div>
 
             <div class="form-group">
@@ -39,8 +41,11 @@
                     id="password" 
                     placeholder="Enter your password"
                     autocomplete="current-password"
+                    formControlName="password"
                 >
-                <div class="error" id="passwordError"></div>
+                <div class="error" *ngIf="signUpForm.get('password')?.invalid && signUpForm.get('password')?.touched">
+                    Password is required
+                </div>
             </div>
 
             <div class="remember-forgot">
@@ -51,7 +56,7 @@
                 <a [routerLink]="'/reset-password'" (click)="resetPassword($event)" class="forgot-password">Forgot password?</a>
             </div>
 
-            <button type="submit" class="login-btn" id="loginButton">
+            <button (click)="register()" type="submit" class="login-btn" id="loginButton" [disabled]="signUpForm.invalid">
                 Sign Up
             </button>
         </form>
@@ -66,7 +71,7 @@
         </div>
 
         <div class="signup-link">
-            <p>Already have an account? <a href="login">Login</a></p>
+            <p>Already have an account? <a [routerLink]="'/login'">Login</a></p>
         </div>
     </div>
 </div>

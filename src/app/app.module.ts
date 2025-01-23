@@ -5,6 +5,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { InterceptorInterceptor } from '../app/core/interceptor/interceptor.interceptor';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
+import { environment } from 'src/environment';
+
 
 
 @NgModule({
@@ -14,7 +17,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [
     {provide : HTTP_INTERCEPTORS, useClass: InterceptorInterceptor, multi: true}
