@@ -73,6 +73,7 @@ export class VerifyEmailComponent {
   resendCode(): void {
     console.log('Resend code triggered');
     this.resetTimer();
+    // this._authService.resendCode( )
     // Implement resend code logic (e.g., call API to resend)
   }
 

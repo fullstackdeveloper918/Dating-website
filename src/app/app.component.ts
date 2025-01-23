@@ -12,15 +12,6 @@ export class AppComponent {
   constructor(private auth: AngularFireAuth, private toastr: ToastrService) {}
 
 
-  showSuccess() {
-    this.toastr.success('Hello world!', 'Success');
-  }
- 
-  ngOnInit(){
-    // this.testSignIn();
-    this.showSuccess();
-  }
-
   // testSignIn() {
   //   const email = 'thakur.ashok9180@gmail.com'; // Replace with a test email
   //   const password = 'ashok@123'; // Replace with the corresponding password

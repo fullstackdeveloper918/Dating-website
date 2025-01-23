@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from 'src/app/core/service/api/authentication.service';
 
@@ -11,11 +11,16 @@ import { AuthenticationService } from 'src/app/core/service/api/authentication.s
 })
 export class ResetPasswordComponent {
   resetForm!: FormGroup  
+  email!: string
+  token!: string
   constructor(
   private fb: FormBuilder, 
   private _authService : AuthenticationService,
   private router: Router,
-  private toastr : ToastrService) {}
+  private toastr : ToastrService,
+  private activatedRoute: ActivatedRoute) {
+
+  }
 
   ngOnInit() {
     this.initializeForm();

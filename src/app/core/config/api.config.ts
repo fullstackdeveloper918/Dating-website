@@ -3,5 +3,6 @@ export const apiRoutes = {
     register : 'user/register',
     login : 'auth/login',
     forgotPassword: 'user/forgot-password',
-    verifyEmail : 'user/verifyEmail'
+    verifyEmail : 'user/verifyEmail',
+    confirmPassword: 'user/update-new-password'
 }
