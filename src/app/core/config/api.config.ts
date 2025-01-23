@@ -1,5 +1,7 @@
 export const apiRoutes = {
-    todo : 'todos',
+    testing : 'user/testing',
     register : 'user/register',
-    login : 'auth/login'
+    login : 'auth/login',
+    forgotPassword: 'user/forgot-password',
+    verifyEmail : 'user/verifyEmail'
 }

@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from 'src/app/core/service/api/authentication.service';
+import { StorageService } from 'src/app/core/service/storage/storage.service';
 
 @Component({
   selector: 'app-login',
@@ -12,41 +14,44 @@ export class LoginComponent {
 
   loginForm!: FormGroup; // Declare the login form
 
-  constructor(private fb: FormBuilder, private router: Router, private _authService : AuthenticationService) {}
+  constructor(
+  private fb: FormBuilder, 
+  private router: Router, 
+  private _authService : AuthenticationService,
+  private _storageService : StorageService,
+  private tostr : ToastrService) {}
 
   ngOnInit(): void {
-    this.initializeForm(); // Initialize the form on component initialization
+    this.initializeForm();
   }
 
-  // Initialize the login form with validation rules
   initializeForm(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]], // Email field with required and email format validation
-      password: ['', [Validators.required, Validators.minLength(6)]], // Password field with required and minimum length validation
+      email: ['', [Validators.required, Validators.email]], 
+      password: ['', [Validators.required, Validators.minLength(6)]], 
     });
   }
 
-  // Method to handle form submission
+  // LOGIN
   async login(event: Event): Promise<void> {
-    event.preventDefault(); // Prevent default form submission behavior
-  
+    event.preventDefault(); 
     if (this.loginForm.valid) {
       try {
         const response = await this._authService.login(this.loginForm.value).toPromise();
-        console.log('Login Successful:', response);
-        // Navigate to the home page after successful login or handle response
-        // this.router.navigate(['/home']);
+        if(response.status == 200){
+          this.tostr.success('Login Successfully')
+          this._storageService.setItem('user',response)
+          this.router.navigate(['/main']);
+        }
       } catch (error) {
         console.error('Login Failed:', error);
-        // Display error message to the user if needed
-        alert('Login failed. Please check your credentials or try again later.');
       }
     } else {
-      this.loginForm.markAllAsTouched(); // Mark all fields as touched to display validation errors
+      this.loginForm.markAllAsTouched(); 
     }
   }
   
-
+  // GO TO HOME
   goToHome(event: Event) {
     event.preventDefault();  // Prevent form submission reload
     console.log('This is working');

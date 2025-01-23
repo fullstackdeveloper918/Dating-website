@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
@@ -8,12 +9,17 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 })
 export class AppComponent {
   // title = 'Dating-app';
-  constructor(private auth: AngularFireAuth) {}
+  constructor(private auth: AngularFireAuth, private toastr: ToastrService) {}
 
 
-  // ngOnInit(){
-  //   this.testSignIn();
-  // }
+  showSuccess() {
+    this.toastr.success('Hello world!', 'Success');
+  }
+ 
+  ngOnInit(){
+    // this.testSignIn();
+    this.showSuccess();
+  }
 
   // testSignIn() {
   //   const email = 'thakur.ashok9180@gmail.com'; // Replace with a test email

@@ -16,7 +16,7 @@
                     formControlName="userName"
                 >
                 <div class="error" *ngIf="signUpForm.get('userName')?.invalid && signUpForm.get('userName')?.touched">
-                    User Name is required
+                    User Name is required 
                 </div>
             </div>
 
@@ -30,7 +30,7 @@
                     formControlName="email"
                 >
                 <div class="error" *ngIf="signUpForm.get('email')?.invalid && signUpForm.get('email')?.touched">
-                    Valid Email is required
+                    Valid Email is required or not in correct format
                 </div>
             </div>
 
@@ -48,6 +48,15 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label for="referral code">Referral Code</label>
+                <input 
+                    placeholder="referral code"
+                    formControlName="referralCode"
+                >
+            </div>
+
+
             <div class="remember-forgot">
                 <div class="remember-me">
                     <input type="checkbox" id="remember">
@@ -56,7 +65,7 @@
                 <a [routerLink]="'/reset-password'" (click)="resetPassword($event)" class="forgot-password">Forgot password?</a>
             </div>
 
-            <button (click)="register()" type="submit" class="login-btn" id="loginButton" [disabled]="signUpForm.invalid">
+            <button (click)="register()" type="submit" class="login-btn" id="loginButton" >
                 Sign Up
             </button>
         </form>

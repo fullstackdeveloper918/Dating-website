@@ -17,5 +17,15 @@ export class AuthenticationService {
   login(loginForm:any){
     return this._apiService.post(apiRoutes.login, loginForm)
   }
-}
+
+  resetPassword(resetForm:any){
+    return this._apiService.post(apiRoutes.forgotPassword, resetForm)
+  }
+
+  // VERIFY EMAIL
+  verifyEmail(code:any){
+    console.log('code',code)
+    return this._apiService.post(apiRoutes.verifyEmail,code)
+  }
+} 
   

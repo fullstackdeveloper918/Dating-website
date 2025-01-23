@@ -10,6 +10,6 @@ export class HomeService {
   constructor(private _apiService : ApiService) { }
 
   getTodo(){
-   return this._apiService.getAll(apiRoutes.todo)
+   return this._apiService.getAll(apiRoutes.testing)
   }
 }

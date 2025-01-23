@@ -31,10 +31,10 @@ export class ApiService {
       observe: 'response',
     };
     if (body) {
-      return this.http.post<T>(url, body, options);
+      return this.http.post<T>(url, body);
     }
 
-    return this.http.post<T>(url, {}, options);  // Empty body for POST
+    return this.http.post<T>(url, {});  // Empty body for POST
   }
 
   // PUT method - Include body only if provided

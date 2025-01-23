@@ -13,15 +13,13 @@ export class InterceptorInterceptor implements HttpInterceptor {
   constructor() {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const headers = request.headers.set('Authorization', 'Bearer your-token-here')
-    .set('Custom-Header', 'CustomHeaderValue');
-    console.log('request',request)
-    console.log('hello')
+    const token = localStorage.getItem('token'); // Replace with your token retrieval logic
 
-// Clone the request and set the new headers
-      const clonedRequest = request.clone({ headers });
+    let headers = request.headers
+      .set('Authorization', `Bearer ${token || 'your-token-here'}`)
+      .set('Custom-Header', 'CustomHeaderValue');
 
-      // Pass the cloned request to the next handler
-      return next.handle(clonedRequest);
+    const clonedRequest = request.clone({ headers });
+    return next.handle(clonedRequest);
   }
 }

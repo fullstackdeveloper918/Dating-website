@@ -3,10 +3,13 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { InterceptorInterceptor } from '../app/core/interceptor/interceptor.interceptor';
+// import { InterceptorInterceptor } from '../app/core/interceptor/interceptor.interceptor';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { environment } from 'src/environment';
+import { ToastrModule } from 'ngx-toastr';  // Import ToastrModule
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Import this module
+
 
 
 
@@ -18,10 +21,12 @@ import { environment } from 'src/environment';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    AngularFireModule.initializeApp(environment.firebase)
+    AngularFireModule.initializeApp(environment.firebase),
+    ToastrModule.forRoot(),
+    BrowserAnimationsModule     
   ],
   providers: [
-    {provide : HTTP_INTERCEPTORS, useClass: InterceptorInterceptor, multi: true}
+    // {provide : HTTP_INTERCEPTORS, useClass: InterceptorInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })
