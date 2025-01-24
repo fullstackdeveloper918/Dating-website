@@ -18,8 +18,8 @@
         <tr class="bg-indigo-600 text-white">
           <th class="px-4 py-2">#</th>
           <th class="px-4 py-2">Code</th>
-          <th class="px-4 py-2">Used by</th>
           <th class="px-4 py-2">Created At</th>
+          <th class="px-4 py-2">Used by</th>
         </tr>
       </thead>
       <tbody>
@@ -27,7 +27,7 @@
           <td class="px-4 py-2 text-center">{{ i + 1 }}</td>
           <td class="px-4 py-2 text-center">{{ code.referral_code }}</td>
           <td class="px-4 py-2 text-center">{{ code.created_at | date: 'short' }}</td>
-          <td class="px-4 py-2 text-center">{{ code.used_by_name}}</td>
+          <td class="px-4 py-2 text-center">{{ code.used_by_name  == null ? 'Not used' :code.used_by_name }}</td>
           <td class="px-4 py-2 text-center"> 
             <!-- <span [ngClass]="{
                 'text-green-600 font-medium': code.isActive,

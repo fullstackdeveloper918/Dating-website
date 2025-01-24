@@ -44,7 +44,9 @@ export class LoginComponent {
           this.router.navigate(['/main']);
         }
       } catch (error:any) {
-        this.tostr.error(error)
+        if(error.status == 400){
+          this.tostr.error('Email or Password Incorrect')
+        }
       }
     } else {
       this.tostr.error('Form is invalid. Please fill out all required fields.')

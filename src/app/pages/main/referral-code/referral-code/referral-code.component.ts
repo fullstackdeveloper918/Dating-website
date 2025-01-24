@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReferralCodeService } from 'src/app/core/service/referral-code.service';
 import { AddReferralCodeComponent } from '../add-referral-code/add-referral-code.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-referral-code',
@@ -14,7 +15,8 @@ export class ReferralCodeComponent {
 
   constructor(
   private referralCodeService: ReferralCodeService,
-  private matdialog : MatDialog) {}
+  private matdialog : MatDialog,
+  private toastr : ToastrService) {}
 
   ngOnInit(): void {
     this.getReferralcodes();
