@@ -33,5 +33,15 @@ export class AuthenticationService {
     console.log('data',data)
     return this._apiService.post(apiRoutes.confirmPassword, data)
   }
+
+  // RESEND CODE 
+  resendCode(email:any){
+    return this._apiService.post(apiRoutes.resendCode, email)
+  }
+
+  // CHECK REFERRAL CODE
+  checkReferralCode(referralCode:any){
+  return this._apiService.post(apiRoutes.checkReferral,referralCode)
+  } 
 } 
   

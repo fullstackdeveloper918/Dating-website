@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from 'src/app/core/service/api/authentication.service';
 
 @Component({
@@ -12,19 +13,23 @@ export class SignUpComponent {
 
   signUpForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private _authService : AuthenticationService, private router: Router) {}
+  constructor(
+  private fb: FormBuilder,
+  private _authService : AuthenticationService, 
+  private router: Router,
+  private toastr : ToastrService) {}
 
   ngOnInit(): void {
     this.initializeForm();
   }
  
-  // INITIALISE FORM
+  // INITIALISE FORM and Vercel error resolve
   initializeForm(): void {
     this.signUpForm = this.fb.group({
       userName: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      referralCode: ['']
+      referralCode: ['', Validators.minLength(6)]
     });
   }
 
@@ -33,29 +38,56 @@ export class SignUpComponent {
     console.log('working', this.signUpForm.get('userName')?.valid);
     if (this.signUpForm.valid) {
       try {
-        this._authService.register(this.signUpForm.value).subscribe({
-          next: (res: any) => {
+        this._authService.register(this.signUpForm.value).subscribe(
+          (res: any) => {
             if(res.status == '200'){
-              this.router.navigate(['verify-email'])
-            }
-            console.log('Registration successful:', res);
-            // Additional logic for success, e.g., navigate to login page or show success message
+              this.toastr.success('Register user successfully , Enter 4 digit code')
+              this.router.navigate([`verify-email/${this.signUpForm.value.email}`]);
+               }
           },
-          error: (err: any) => {
-            console.error('Error during registration:', err);
-            // Show error message to the user
-            alert('Registration failed. Please try again later.');
-          }
-        });
+          // error: (err: any) => {
+          //   this.toastr.error('Error during registration')
+          // }
+        );
       } catch (error) {
-        console.error('Unexpected error:', error);
-        alert('Something went wrong. Please try again.');
+        this.toastr.error('Error during registration')
       }
     } else {
       this.signUpForm.markAllAsTouched();
-      console.log('Form is invalid. Please fill out all required fields.');
+      this.toastr.error('Form is invalid. Please fill out all required fields.')
     }
   }
+
+  // CHECK REFERRAL CODE
+  onReferralCodeChange(event: any): void {
+    const referralCode = event.target.value;
+    console.log(referralCode.length);
+      
+    // Check if the referral code length is 6
+    if (referralCode && referralCode.length === 6) {
+      console.log('event', referralCode);
+      const payload = {
+        referralCode: referralCode,
+      };
+  
+      // Call API only if the referral code length is 6
+      this.checkReferralCode(payload);
+    }
+  }
+  
+  async checkReferralCode(payload: { referralCode: string }) {
+    try {
+      // Make the API call
+      const response = await this._authService.checkReferralCode(payload).toPromise();
+      console.log('API response', response);
+      // Handle the API response here
+    } catch (error:any) {
+      this.toastr.error(error.error.message)
+      console.error('API error', error);
+      // Handle error (optional)
+    }
+  }
+  
   
 
   resetPassword(event: Event): void {

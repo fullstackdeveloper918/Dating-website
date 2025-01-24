@@ -9,12 +9,11 @@
   
       <!-- Timer Display -->
       <p 
-        class="text-center text-sm font-medium text-gray-600 mb-6" 
-        [class.text-red-500]="timeLeft <= 10"
-      >
-        Time Remaining: {{ timeLeft | date:'mm:ss':'UTC' }}
-      </p>
-  
+      class="text-center text-sm font-medium text-gray-600 mb-6" 
+      [class.text-red-500]="timeLeft <= 10"
+    >
+    Time Remaining: {{ formatTime(timeLeft) }}
+  </p>
       <form [formGroup]="verifyForm" (ngSubmit)="verifyCode()" class="space-y-4">
         <div class="flex justify-center space-x-4">
           <input

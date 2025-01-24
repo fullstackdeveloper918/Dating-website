@@ -25,7 +25,7 @@ const routes: Routes = [
     component : ResetPasswordComponent
   },
   {
-    path : 'verify-email',
+    path : 'verify-email/:email',
     component : VerifyEmailComponent
   },
   { 

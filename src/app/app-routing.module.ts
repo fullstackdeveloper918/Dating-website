@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LandingComponent } from './pages/main/landing.component';
+import { AuthGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -10,10 +11,12 @@ const routes: Routes = [
     {
       path : 'main',
       component : LandingComponent,
+      canActivate : [AuthGuard],
       loadChildren : () => import('./pages/main/main.module').then(m => m.MainModule)
     },
     {
       path : 'messages',
+      canActivate : [AuthGuard],
       loadChildren : () => import('./pages/main/messages/messages.module').then(m => m.MessagesModule)
     }
   // {

@@ -38,17 +38,17 @@
           <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="error">
             <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
             <small *ngIf="loginForm.get('password')?.errors?.['minlength']">
-              Password must be at least 6 characters long.
+                Password must be at least 6 characters long.
             </small>
-          </div>
+        </div>        
         </div>
   
         <!-- Remember Me and Forgot Password -->
         <div class="remember-forgot">
-          <div class="remember-me">
+          <!-- <div class="remember-me">
             <input type="checkbox" id="remember" />
             <label for="remember">Remember me</label>
-          </div>
+          </div> -->
           <a [routerLink]="'/reset-password'" class="forgot-password">Forgot password?</a>
         </div>
   
@@ -59,14 +59,14 @@
       </form>
   
       <!-- Social Login -->
-      <div class="social-login">
+      <!-- <div class="social-login">
         <p>Or continue with</p>
         <div class="social-buttons">
           <div class="social-btn">G</div>
           <div class="social-btn">A</div>
           <div class="social-btn">F</div>
         </div>
-      </div>
+      </div> -->
   
       <!-- Sign Up Link -->
       <div class="signup-link">

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { StorageService } from 'src/app/core/service/storage/storage.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,4 +9,13 @@ import { Component } from '@angular/core';
 })
 export class NavbarComponent {
 
+  constructor(
+  private router: Router,
+  private storageService: StorageService
+  ){}
+
+  logOut(){
+  this.storageService.removeItem('user');
+  this.router.navigate(['/login'])
+  }
 }

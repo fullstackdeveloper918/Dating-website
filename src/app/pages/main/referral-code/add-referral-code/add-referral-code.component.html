@@ -1,0 +1,41 @@
+<div class="p-4">
+    <h2 class="text-lg font-semibold mb-4">Add Referral Code</h2>
+    <form [formGroup]="referralCodeForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Referral Code</mat-label>
+        <input
+          matInput
+          formControlName="referralCode"
+          placeholder="Enter referral code"
+        />
+        <mat-error *ngIf="referralCodeForm.get('referralCode')?.hasError('required')">
+          Referral code is required
+        </mat-error>
+        <mat-error *ngIf="referralCodeForm.get('referralCode')?.hasError('minlength')">
+          Referral code must be at least 6 characters
+        </mat-error>
+        <mat-error *ngIf="referralCodeForm.get('referralCode')?.hasError('maxlength')">
+          Referral code cannot exceed 10 characters
+        </mat-error>
+      </mat-form-field>
+  
+      <div class="mt-4 flex justify-end">
+        <button
+          mat-button
+          type="button"
+          class="mr-2"
+          (click)="onCancel()"
+        >
+          Cancel
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="referralCodeForm.invalid"
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>

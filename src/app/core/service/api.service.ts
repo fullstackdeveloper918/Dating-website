@@ -20,7 +20,7 @@ export class ApiService {
       options.params = params;
     }
 
-    return this.http.get<T>(url, options);
+    return this.http.get<T>(url);
   }
 
   // POST method - Include body only if provided

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ToastrService } from 'ngx-toastr';
+import { LoaderService } from './core/service/loader/loader.service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,9 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AppComponent {
   // title = 'Dating-app';
-  constructor(private auth: AngularFireAuth, private toastr: ToastrService) {}
+  loading$ = this.loaderService.loading$; // Observable to track loading state
+
+  constructor(private loaderService: LoaderService) {}
 
 
   // testSignIn() {
@@ -25,5 +28,5 @@ export class AppComponent {
   //       console.error('Sign-in error:', error.message);
   //       alert('Firebase connection failed. Check the console for details.');
   //     });
-  // }
+  // }  
 }

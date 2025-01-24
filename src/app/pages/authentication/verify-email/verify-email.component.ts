@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/core/service/api.service';
 import { AuthenticationService } from 'src/app/core/service/api/authentication.service';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-verify-email',
@@ -12,15 +12,19 @@ import { Router } from '@angular/router';
 })
 export class VerifyEmailComponent {
   verifyForm!: FormGroup;
-  timeLeft: number = 180; // 3 minutes in seconds
+  timeLeft: number = 300; // 3 minutes in seconds
   timer: any;
   isTimeUp: boolean = false;
+  email:any
 
   constructor(
     private fb: FormBuilder, 
     private _authService : AuthenticationService,
     private toastr: ToastrService,
-    private router : Router) {}
+    private router : Router,
+    private route: ActivatedRoute) {
+      this.email = this.route.snapshot.paramMap.get('email');
+    }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -42,7 +46,7 @@ export class VerifyEmailComponent {
         this.timeLeft--;
       } else {
         clearInterval(this.timer);
-        this.isTimeUp = true; // Flag to disable form inputs if time is up
+        this.isTimeUp = true; 
       }
     }, 1000); // Decrement every second
   }
@@ -71,15 +75,48 @@ export class VerifyEmailComponent {
   }
 
   resendCode(): void {
-    console.log('Resend code triggered');
-    this.resetTimer();
-    // this._authService.resendCode( )
-    // Implement resend code logic (e.g., call API to resend)
+    this.verifyForm.reset();
+    try {
+      this.resetTimer();
+      
+      const payload = {
+        email: this.email
+      };
+  
+      this._authService.resendCode(payload).subscribe({
+        next: (res: any) => {
+          if(res.status == 200){
+            this.toastr.success(res.message)
+          }
+          console.log('res', res);
+        },
+        error: (err) => {
+          console.error('Error occurred while resending the code:', err);
+          this.toastr.error('Error', err)
+        }
+      });
+  
+    } catch (error) {
+      console.error('An unexpected error occurred:', error);
+      // Handle any unexpected errors
+    }
+  }
+
+  // FORMAT TIMIING FOR TIMER
+  formatTime(timeInSeconds: number): string {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = timeInSeconds % 60;
+    return `${this.pad(minutes)}:${this.pad(seconds)}`;
+  }
+
+  // Helper function to pad numbers to ensure two digits
+  pad(value: number): string {
+    return value < 10 ? '0' + value : value.toString();
   }
 
   resetTimer(): void {
     clearInterval(this.timer);
-    this.timeLeft = 180; // Reset to 3 minutes
+    this.timeLeft = 300; // Reset to 3 minutes
     this.isTimeUp = false;
     this.startTimer(); // Restart timer
   }

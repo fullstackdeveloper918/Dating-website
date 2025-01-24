@@ -17,6 +17,14 @@ const routes: Routes = [
     {
       path : 'profile',
       loadChildren : () => import('./profile/profile.module').then(m => m.ProfileModule)
+    },
+    {
+      path : 'edit-profile',
+      loadChildren : () => import('./edit-profile/edit-profile.module').then(m => m.EditProfileModule)
+    },
+    {
+      path: 'referral-code',
+      loadChildren : () => import('./referral-code/referral-code.module').then(m => m.ReferralCodeModule)
     }
 ];
 

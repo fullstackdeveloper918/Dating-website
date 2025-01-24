@@ -4,5 +4,15 @@ export const apiRoutes = {
     login : 'auth/login',
     forgotPassword: 'user/forgot-password',
     verifyEmail : 'user/verifyEmail',
-    confirmPassword: 'user/update-new-password'
+    confirmPassword: 'user/update-new-password',
+    resendCode : 'user/resend-pin',
+    checkReferral: 'user/is-referral-use',
+
+
+    // user 
+    userList : 'user/list',
+    getUser : 'user/edit-user',
+    updateUserProfile : 'user/update-profile',
+    getReferralCode : 'referral/listing',
+    addReferralCode : 'referral/add'
 }

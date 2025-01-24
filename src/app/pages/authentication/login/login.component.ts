@@ -43,10 +43,11 @@ export class LoginComponent {
           this._storageService.setItem('user',response)
           this.router.navigate(['/main']);
         }
-      } catch (error) {
-        console.error('Login Failed:', error);
+      } catch (error:any) {
+        this.tostr.error(error)
       }
     } else {
+      this.tostr.error('Form is invalid. Please fill out all required fields.')
       this.loginForm.markAllAsTouched(); 
     }
   }
