@@ -18,7 +18,7 @@
   <div class="flex-1 overflow-y-auto space-y-1 p-2">
     <div *ngFor="let chat of chatList" (click)="selectChat(chat)" 
       class="flex items-center p-3 rounded-lg cursor-pointer hover:bg-gray-200 transition duration-200">
-      <img [src]="chat.avatar" alt="Avatar" class="w-12 h-12 rounded-full border mr-3" />
+      <img src="https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png" alt="Avatar" class="w-12 h-12 rounded-full border mr-3" />
       <div class="flex-1">
         <h3 class="text-lg font-semibold text-gray-800">{{ chat.username }}</h3>
         <!-- <p class="text-sm text-gray-600 truncate">{{ chat.lastMessage }}</p> -->

@@ -60,18 +60,18 @@ export class ChatService {
     return this.messages.asObservable();
   }
 
-  // sendMessage(message: string): void {
-  //   if (this.socket.connected) {
-  //     this.socket.emit('message', message);
-  //   } else {
-  //     console.warn('WebSocket is not connected.');
-  //   }
-  // }
-  sendMessage(senderId: string, receiverId: string, message: string) {
-    console.log('senderId',senderId);
-    console.log('receiverId',receiverId)
-    this.socket.emit('send_message', { senderId, receiverId, message });
+  sendMessage(message: string): void {
+    if (this.socket.connected) {
+      this.socket.emit('message', message);
+    } else {
+      console.warn('WebSocket is not connected.');
+    }
   }
+  // sendMessage(senderId: string, receiverId: string, message: string) {
+  //   console.log('senderId',senderId);
+  //   console.log('receiverId',receiverId)
+  //   this.socket.emit('send_message', { senderId, receiverId, message });
+  // }
   sendTyping(senderId: string, receiverId: string) {
     this.socket.emit('typing', { senderId, receiverId });
   }
@@ -88,5 +88,17 @@ export class ChatService {
 
   getUsers(){
       return this._apiService.getAll(apiRoutes.userList)
+    }
+
+    listenForMessages(): Observable<string> {
+      return new Observable((observer) => {
+        this.socket.on('message', (message: string) => {
+          observer.next(message);
+        });
+  
+        return () => {
+          this.socket.off('message');
+        };
+      });
     }
 }
