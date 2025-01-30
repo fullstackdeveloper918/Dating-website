@@ -1,16 +1,13 @@
 <div class="flex h-screen bg-gray-100">
-    <!-- Sidebar -->
     <app-chat-sidebar
       class="w-1/3\\\ bg-white border-r shadow-md"
       (chatSelected)="onChatSelected($event)"
     >
     </app-chat-sidebar>
   
-    <!-- Chat Window -->
     <app-chat-window
       class="flex-1 bg-gray-50 flex flex-col shadow-inner"
       [selectedChat]="currentChat"
     >
     </app-chat-window>
   </div>
-  

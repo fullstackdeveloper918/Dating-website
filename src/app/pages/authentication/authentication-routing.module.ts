@@ -9,7 +9,7 @@ import { ConfirmPasswordComponent } from './confirm-password/confirm-password.co
 const routes: Routes = [
   {
     path : '',
-    redirectTo : 'sign-up',
+    redirectTo : 'login',
     pathMatch : 'full'
   },
   {

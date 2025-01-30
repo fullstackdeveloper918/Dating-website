@@ -14,13 +14,13 @@
             type="email"
             id="email"
             placeholder="name@company.com"
-            formControlName="email"
+            formControlName="sec_email"
             autocomplete="email"
           />
           <!-- Error Message for Email -->
-          <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="error">
-            <small *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</small>
-            <small *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email address.</small>
+          <div *ngIf="loginForm.get('sec_email')?.touched && loginForm.get('sec_email')?.invalid" class="error">
+            <small *ngIf="loginForm.get('sec_email')?.errors?.['required']">Email is required.</small>
+            <small *ngIf="loginForm.get('sec_email')?.errors?.['email']">Enter a valid email address.</small>
           </div>
         </div>
   
@@ -31,13 +31,13 @@
             type="password"
             id="password"
             placeholder="Enter your password"
-            formControlName="password"
+            formControlName="sec_password"
             autocomplete="current-password"
           />
           <!-- Error Message for Password -->
-          <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="error">
-            <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
-            <small *ngIf="loginForm.get('password')?.errors?.['minlength']">
+          <div *ngIf="loginForm.get('sec_password')?.touched && loginForm.get('sec_password')?.invalid" class="error">
+            <small *ngIf="loginForm.get('sec_password')?.errors?.['required']">Password is required.</small>
+            <small *ngIf="loginForm.get('sec_password')?.errors?.['minlength']">
                 Password must be at least 6 characters long.
             </small>
         </div>        

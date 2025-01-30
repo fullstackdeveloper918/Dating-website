@@ -1,0 +1,66 @@
+.messages-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  .connection-status {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+  }
+
+  .connection-status.connected {
+    color: green;
+  }
+
+  .connection-status.disconnected {
+    color: red;
+  }
+
+  .messages-list {
+    margin-bottom: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .messages-list ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  .messages-list li {
+    background-color: #f1f1f1;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .message-input {
+    display: flex;
+    gap: 10px;
+  }
+
+  .message-input input {
+    flex: 1;
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .message-input button {
+    padding: 8px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+  }
+
+  .message-input button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+  }

@@ -28,7 +28,7 @@
               'bg-gray-200 text-gray-800': message.sender !== 'me'
             }"
           >
-            {{ message.text }}
+            {{ message }}
           </div>
         </div>
       </div>
@@ -41,6 +41,7 @@
         [(ngModel)]="newMessage"
         placeholder="Type a message"
         class="flex-1 p-3 border rounded-full shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+        (keydown.enter)="sendMessage()"
       />
       <button
         (click)="sendMessage()"

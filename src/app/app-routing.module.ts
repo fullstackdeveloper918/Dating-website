@@ -15,7 +15,7 @@ const routes: Routes = [
       loadChildren : () => import('./pages/main/main.module').then(m => m.MainModule)
     },
     {
-      path : 'messages',
+      path : 'chat',
       canActivate : [AuthGuard],
       loadChildren : () => import('./pages/main/messages/messages.module').then(m => m.MessagesModule)
     }

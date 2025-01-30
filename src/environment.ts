@@ -1,4 +1,5 @@
-export const apiUrl = 'https://dating.goaideme.com'
+// export const apiUrl = 'https://cors-anywhere.herokuapp.com/https://dating.goaideme.com'  // with cors
+export const apiUrl = 'https://dating.goaideme.com'  // without cors
 export const environment = {
     production: false,
     firebase: {

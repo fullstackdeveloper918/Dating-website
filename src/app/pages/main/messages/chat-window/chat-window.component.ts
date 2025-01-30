@@ -1,4 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { io, Socket } from 'socket.io-client';
+import { ChatService } from 'src/app/core/service/chat.service';
+import { apiUrl } from 'src/environment';
 
 @Component({
   selector: 'app-chat-window',
@@ -6,20 +9,38 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./chat-window.component.scss']
 })
 export class ChatWindowComponent {
-  @Input() selectedChat: any;
+  @Input() selectedChat: any;   // user 2
+  connectionStatus: string = 'Disconnected';
+  messages: any[] = [];
+  newMessage: string = '';
+  currentUser = { id: 'senderId' };  // user 1
+  // selectedChat = { id: 'user2' };
 
-  messages = [
-    { sender: 'me', text: 'Hello!' },
-    { sender: 'John Doe', text: 'Hey, how are you?' },
-    { sender: 'me', text: 'I’m good, thanks! What about you?' },
-  ];
+  constructor(private chatService: ChatService) {}
 
-  newMessage = '';
+  ngOnChanges(changes: SimpleChanges){
+    // console.log("changes", changes['selectedChat']?.currentValue);
+    this.selectedChat = changes['selectedChat']?.currentValue
+  }
 
-  sendMessage() {
+  ngOnInit(): void {
+    this.chatService.getConnectionStatus().subscribe(status => {
+      this.connectionStatus = status;
+    });
+
+    this.chatService.getMessages().subscribe(messages => {
+      this.messages = messages;
+    });
+  }
+
+  sendMessage(): void {
     if (this.newMessage.trim()) {
-      this.messages.push({ sender: 'me', text: this.newMessage.trim() });
+      this.chatService.sendMessage(this.currentUser.id, this.selectedChat.id, this.newMessage);
       this.newMessage = '';
     }
+  }
+
+  ngOnDestroy(): void {
+    this.chatService.disconnect();
   }
 }

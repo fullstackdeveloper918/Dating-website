@@ -27,11 +27,11 @@ export class LoginComponent {
 
   initializeForm(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]], 
-      password: ['', [Validators.required, Validators.minLength(6)]], 
+      sec_email: ['', [Validators.required, Validators.email]], 
+      sec_password: ['', [Validators.required, Validators.minLength(6)]], 
     });
   }
-
+  
   // LOGIN
   async login(event: Event): Promise<void> {
     event.preventDefault(); 
@@ -41,7 +41,7 @@ export class LoginComponent {
         if(response.status == 200){
           this.tostr.success('Login Successfully')
           this._storageService.setItem('user',response)
-          this.router.navigate(['/main']);
+          this.router.navigate(['/chat']);
         }
       } catch (error:any) {
         if(error.status == 400){
