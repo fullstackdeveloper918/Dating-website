@@ -8,7 +8,7 @@ import { ChatService } from 'src/app/core/service/chat.service';
 })
 export class ChatSidebarComponent {
   searchTerm: string = '';
-
+  selectedChat:any
   chatList : any[] = [
   ];
 
@@ -23,13 +23,15 @@ export class ChatSidebarComponent {
   
   selectChat(chat: any) {
     this.chatSelected.emit(chat);
+    this.selectedChat = chat; 
   }
 
 
   getUsers(){
    this._chatService.getUsers().subscribe((user:any)=>{
     this.chatList = user.data;
-    console.log('this.chatlist', this.chatList)
+    this.selectedChat = user.data[0]
+    this.chatSelected.emit(this.selectedChat);
    })
   }
 

@@ -1,0 +1,28 @@
+.sent-message {
+    display: flex;
+    justify-content: flex-end;
+  
+    .message-box {
+      background-color: #3b82f6; // Blue for sender
+      color: white;
+      padding: 10px 15px;
+      border-radius: 10px;
+      max-width: 60%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .received-message {
+    display: flex;
+    justify-content: flex-start;
+  
+    .message-box {
+      background-color: #e5e7eb; // Gray for receiver
+      color: #333;
+      padding: 10px 15px;
+      border-radius: 10px;
+      max-width: 60%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+  

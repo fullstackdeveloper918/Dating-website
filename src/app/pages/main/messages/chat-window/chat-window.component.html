@@ -1,67 +1,64 @@
-<div class="flex-1 flex flex-col h-screen bg-gray-100">
-    <!-- Chat Header -->
-    <div class="p-4 bg-white shadow-md flex items-center space-x-4">
-      <img
-        src="https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png"
-        alt="Avatar"
-        class="w-12 h-12 rounded-full object-cover"
-      />
-      <div>
-        <h3 class="text-lg font-semibold text-gray-800">{{ selectedChat?.name }}</h3>
-        <p class="text-sm text-green-500">Online</p>
-      </div>
-    </div>
-  
-    <!-- Messages -->
-    <div class="flex-1 overflow-y-auto p-6 bg-gray-50 space-y-4">
-      <div *ngFor="let message of messages">
-        <div
-          [ngClass]="{
-            'flex justify-end': message.sender === 'me',
-            'flex justify-start': message.sender !== 'me'
-          }"
-        >
-          <div
-            class="inline-block max-w-xs p-3 rounded-lg shadow-md"
-            [ngClass]="{
-              'bg-blue-500 text-white': message.sender === 'me',
-              'bg-gray-200 text-gray-800': message.sender !== 'me'
-            }"
-          >
-            {{ message }}
-          </div>
+ current users : {{currentUserName}}
+ 
+ <div class="flex-1 flex flex-col h-screen bg-gray-100">
+      <!-- Chat Header -->
+      <div class="p-4 bg-white shadow-md flex items-center space-x-4">
+        <img
+          src="https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png"
+          alt="Avatar"
+          class="w-12 h-12 rounded-full object-cover"
+        />
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800">{{ selectedChat?.name }}</h3>
+          <p class="text-sm text-green-500">Online</p>
         </div>
       </div>
-    </div>
-  
-    <!-- Message Input -->
-    <div class="p-4 bg-white border-t flex items-center space-x-3">
-      <input
-        type="text"
-        [(ngModel)]="newMessage"
-        placeholder="Type a message"
-        class="flex-1 p-3 border rounded-full shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
-        (keydown.enter)="sendMessage()"
-      />
-      <button
-        (click)="sendMessage()"
-        class="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 shadow-md transition duration-200"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          class="w-5 h-5"
+    
+      <!-- Messages -->
+      <div class="flex-1 overflow-y-auto p-6 bg-gray-50 space-y-4">
+        <div *ngFor="let message of messages">
+          <div
+  [ngClass]="{
+    'sent-message': message.senderId === currentUser,
+    'received-message': message.senderId !== currentUser
+  }"
+>
+            <div class="message-box">
+              {{ message.message }}
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    
+      <!-- Message Input -->
+      <div class="p-4 bg-white border-t flex items-center space-x-3">
+        <input
+          type="text"
+          [(ngModel)]="newMessage"
+          placeholder="Type a message"
+          class="flex-1 p-3 border rounded-full shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+          (keydown.enter)="sendMessage()"
+        />
+        <button
+          (click)="sendMessage()"
+          class="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 shadow-md transition duration-200"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M21 12H3m0 0l7-7m-7 7l7 7"
-          />
-        </svg>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="w-5 h-5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M21 12H3m0 0l7-7m-7 7l7 7"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
-  </div>
-  
+    

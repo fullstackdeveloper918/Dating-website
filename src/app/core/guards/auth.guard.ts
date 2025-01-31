@@ -13,7 +13,6 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): boolean {
     const token = this.storageService.getItem('user'); // Retrieve the token from localStorage
-    console.log('token',token)
     // Token exists and is valid (if you want more validation, like expiration, you can add that logic here)
     if (token) {
       // Allow access to the route

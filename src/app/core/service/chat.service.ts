@@ -18,7 +18,7 @@ export class ChatService {
     this.connect();
   }
 
-  private connect(): void {
+   connect(): void {
     this.socket = io(apiUrl, {
       transports: ['websocket'],
       reconnection: true,
@@ -40,8 +40,10 @@ export class ChatService {
     //   console.log('New message received:', message);
     //   this.messages.next([...this.messages.value, message]);
     // });
-    this.socket.on('receive_message', (message) => {
-      this.messages.next([...this.messages.value, message]);
+    this.socket.on('receive_message', ({senderId, message}) => {
+      console.log('senderId',senderId)
+      console.log('message', message)
+      // this.messages.next([...this.messages.value, message]);
     });
     this.socket.on('user_typing', (data) => {
       console.log(`User ${data.senderId} is typing...`);
@@ -49,6 +51,7 @@ export class ChatService {
   }
 
   registerUser(userId: string) {
+    console.log('userId',userId)
     this.socket.emit('register', userId);
   }
 
@@ -60,9 +63,9 @@ export class ChatService {
     return this.messages.asObservable();
   }
 
-  sendMessage(message: string): void {
+  sendMessage(senderId: any, recipientId :any ,message: string): any {
     if (this.socket.connected) {
-      this.socket.emit('message', message);
+      this.socket.emit('private_message',{ senderId, recipientId, message });
     } else {
       console.warn('WebSocket is not connected.');
     }
@@ -82,7 +85,9 @@ export class ChatService {
 
   disconnect(): void {
     if (this.socket) {
+      this.socket.removeAllListeners(); // Remove all event listeners
       this.socket.disconnect();
+      console.log("Socket disconnected.");
     }
   }
 
@@ -92,8 +97,11 @@ export class ChatService {
 
     listenForMessages(): Observable<string> {
       return new Observable((observer) => {
-        this.socket.on('message', (message: string) => {
-          observer.next(message);
+        this.socket.on('receive_message', (data) => {
+          console.log('data',data)
+          console.log('this.messages',this.messages)
+          this.messages.next([...this.messages.value, data]);
+          // console.log('this.messages', this.messages)
         });
   
         return () => {
