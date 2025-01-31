@@ -69,6 +69,7 @@ export class ChatService {
     } else {
       console.warn('WebSocket is not connected.');
     }
+    // this.listenForMessages();
   }
   // sendMessage(senderId: string, receiverId: string, message: string) {
   //   console.log('senderId',senderId);
@@ -96,11 +97,12 @@ export class ChatService {
     }
 
     listenForMessages(): Observable<string> {
+      console.log('this is working')
       return new Observable((observer) => {
         this.socket.on('receive_message', (data) => {
           console.log('data',data)
-          console.log('this.messages',this.messages)
-          this.messages.next([...this.messages.value, data]);
+          // console.log('this.messages',this.messages)
+          this.messages.next(data);
           // console.log('this.messages', this.messages)
         });
   

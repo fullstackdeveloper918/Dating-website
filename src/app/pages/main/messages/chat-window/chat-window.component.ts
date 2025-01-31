@@ -30,7 +30,7 @@ export class ChatWindowComponent {
     if (changes['selectedChat'] && changes['selectedChat'].currentValue) {
       this.selectedChat = changes['selectedChat'].currentValue;
       console.log('Selected Chat:', this.selectedChat);
-      this.messages = []
+      this.messages = [];
       // Disconnect & Reconnect socket for the new chat
       this.reconnectSocket();
     }
@@ -82,13 +82,13 @@ export class ChatWindowComponent {
   }
 
 
-  getMessages(){
-    this.chatService.getMessages().subscribe(messages => {
-      this.messages = messages;
-      console.log('this.messages', this.messages)
-      console.log('current User', this.currentUser)
-    });
-  }
+  // getMessages(){
+  //   this.chatService.getMessages().subscribe(messages => {
+  //     this.messages = messages;
+  //     console.log('this.messages', this.messages)
+  //     console.log('current User', this.currentUser)
+  //   });
+  // }
   sendMessage(): void {
     console.log('this.newmeeage', this.newMessage)
 
@@ -98,16 +98,20 @@ export class ChatWindowComponent {
         senderId: this.currentUser,
         message : this.newMessage})
       this.newMessage = '';
+      // this.getMessages();
       console.log('this.messages', this.messages)
     // }
-    // this.getMessage();
   }
 
-  // getMessage(){
-  //   this.chatService.listenForMessages().subscribe((message)=>{
-  //     console.log('message',message)
-  //   })
-  // }
+  getMessages() {
+    this.chatService.getMessages().subscribe((messages: any[]) => {
+      // console.log('messages',messages)
+      // console.log('this.message', this.messages)
+      this.messages.push(messages)
+      console.log('this.messages', this.messages)
+      // this.messages.push(...messages); // Spread operator to add multiple messages
+    });
+  }
 
   ngOnDestroy(): void {
     this.chatService.disconnect();
