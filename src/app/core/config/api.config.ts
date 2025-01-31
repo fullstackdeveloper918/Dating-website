@@ -14,5 +14,8 @@ export const apiRoutes = {
     getUser : 'user/edit-user',
     updateUserProfile : 'user/update-profile',
     getReferralCode : 'referral/listing',
-    addReferralCode : 'referral/add'
+    addReferralCode : 'referral/add',
+
+    // get message list
+    message_list : 'messages/message-list'
 }

@@ -19,10 +19,12 @@ export class LoginComponent {
   private router: Router, 
   private _authService : AuthenticationService,
   private _storageService : StorageService,
-  private tostr : ToastrService) {}
+  private tostr : ToastrService,
+  private storageService : StorageService) {}
 
   ngOnInit(): void {
     this.initializeForm();
+    this.checkUser();
   }
 
   initializeForm(): void {
@@ -30,6 +32,14 @@ export class LoginComponent {
       sec_email: ['', [Validators.required, Validators.email]], 
       sec_password: ['', [Validators.required, Validators.minLength(6)]], 
     });
+  }
+
+  // CHECK USER
+  checkUser(){
+   const user = this.storageService.getItem("user")
+   if(user){
+    this.router.navigate(['/chat'])
+   }
   }
   
   // LOGIN

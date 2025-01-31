@@ -26,10 +26,12 @@ export class SignUpComponent {
   // INITIALISE FORM and Vercel error resolve
   initializeForm(): void {
     this.signUpForm = this.fb.group({
-      userName: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      referralCode: ['', Validators.minLength(6)]
+      first_name : ['', Validators.required],
+      surname : ['', Validators.required],
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      sec_email: ['', [Validators.required, Validators.email]],
+      sec_password: ['', [Validators.required, Validators.minLength(6)]],
+      // referralCode: ['', Validators.minLength(6)]
     });
   }
 
@@ -42,7 +44,7 @@ export class SignUpComponent {
           (res: any) => {
             if(res.status == '200'){
               this.toastr.success('Register user successfully , Enter 4 digit code')
-              this.router.navigate([`verify-email/${this.signUpForm.value.email}`]);
+              this.router.navigate([`verify-email/${this.signUpForm.value.sec_email}`]);
                }
           },
           // error: (err: any) => {

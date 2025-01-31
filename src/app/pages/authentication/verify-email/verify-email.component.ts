@@ -55,7 +55,7 @@ export class VerifyEmailComponent {
     if (this.verifyForm.valid && !this.isTimeUp) {
       const codeString = Object.values(this.verifyForm.value).join(''); // Concatenate digits into a string
       const payload = {
-        code : parseInt(codeString, 10)
+        code : codeString
       }
       this._authService.verifyEmail(payload)
       .subscribe((res:any)=>{

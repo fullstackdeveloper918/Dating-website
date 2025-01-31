@@ -111,4 +111,9 @@ export class ChatService {
         };
       });
     }
+
+    // GET CHAT HISTORY
+  getMessageHistory(payload:any){
+   return this._apiService.post(apiRoutes.message_list, payload)
+  }
 }

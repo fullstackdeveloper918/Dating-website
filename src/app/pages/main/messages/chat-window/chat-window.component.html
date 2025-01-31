@@ -2,6 +2,7 @@
  
  <div class="flex-1 flex flex-col h-screen bg-gray-100">
       <!-- Chat Header -->
+       <div class="flex" style="width: 100% !important;">
       <div class="p-4 bg-white shadow-md flex items-center space-x-4">
         <img
           src="https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png"
@@ -11,16 +12,24 @@
         <div>
           <h3 class="text-lg font-semibold text-gray-800">{{ selectedChat?.name }}</h3>
           <p class="text-sm text-green-500">Online</p>
-        </div>
+        </div>  
       </div>
+      <button
+    (click)="logout()"
+    class="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+  >
+    Logout
+  </button>
+    </div>
+      
     
       <!-- Messages -->
       <div class="flex-1 overflow-y-auto p-6 bg-gray-50 space-y-4">
         <div *ngFor="let message of messages">
           <div
   [ngClass]="{
-    'sent-message': message.senderId === currentUser,
-    'received-message': message.senderId !== currentUser
+    'sent-message': message.sender_id === currentUser,
+    'received-message': message.sender_id !== currentUser
   }"
 >
             <div class="message-box">
