@@ -37,7 +37,6 @@ export class EditProfileComponent {
   // Fetch current user information, including the profile picture URL
   getUserInfo(): void {
     this.userService.getUserInfo().subscribe((userData: any) => {
-      console.log('userdata',userData)
       this.userForm.patchValue({
         username: userData.data.username,
         // email: userData.data.email
@@ -83,7 +82,6 @@ export class EditProfileComponent {
            this.userForm.patchValue({ profilePicture: '' });
            this.getUserInfo();
           }
-          console.log('response', response);
           // this.router.navigate(['/profile']); // Redirect after successful update
         },
         (error) => {

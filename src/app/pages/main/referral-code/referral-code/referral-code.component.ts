@@ -27,7 +27,6 @@ export class ReferralCodeComponent {
     this.referralCodeService.getReferralCodes().subscribe(
       (response: any) => {
         if (response.status === 200) {
-          console.log('response',response.data)
           this.referralCodes = response.data; // Adjust based on your API response structure
         } else {
           console.error('Error fetching referral codes:', response.message);

@@ -34,7 +34,6 @@ export class ResetPasswordComponent {
 
   resetPassword() {
     // Simulate email send action
-    console.log('emal',this.resetForm?.value)
     if(this.resetForm.valid){
      this._authService.resetPassword(this.resetForm.value).subscribe((res:any)=>{
       if(res.status == 200){
@@ -46,7 +45,6 @@ export class ResetPasswordComponent {
 
   resendEmail() {
     // Logic to resend the email
-    console.log('Resending email...');
     alert('A new password reset link has been sent to your email.');
   }
 

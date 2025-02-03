@@ -10,7 +10,6 @@ export class AuthenticationService {
   constructor(private _apiService : ApiService) { }
 
   register(signUpForm:any){
-    console.log('sinupform',signUpForm)
    return this._apiService.post(apiRoutes.register,signUpForm)
   }
 
@@ -24,13 +23,11 @@ export class AuthenticationService {
 
   // VERIFY EMAIL
   verifyEmail(code:any){
-    console.log('code',code)
     return this._apiService.post(apiRoutes.verifyEmail,code)
   }
 
   // CONFIRMPASSWORD
   confirmPassword(data:any){
-    console.log('data',data)
     return this._apiService.post(apiRoutes.confirmPassword, data)
   }
 

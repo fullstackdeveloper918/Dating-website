@@ -29,15 +29,12 @@ export class MessagesComponent {
   //     timeout: 5000 // Timeout for connection
   //   });
   //   this.socket.on('connect', () => {
-  //     console.log('Connected to WebSocket');
   //     this.connectionStatus = 'Connected';
   //   });
   //   this.socket.on('disconnect', () => {
-  //     console.log('Disconnected from WebSocket');
   //     this.connectionStatus = 'Disconnected';
   //   });
   //   this.socket.on('message', (message: any) => {
-  //     console.log('New message received:', message);
   //     this.messages.push(message);
   //   });
   // }

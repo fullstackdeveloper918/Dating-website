@@ -18,7 +18,7 @@ export class ChatWindowComponent {
   currentUser: any // user 1
   // selectedChat = { id: 'user2' };
   currentUserName:any
-
+  isUserOnline!:boolean
   constructor(
   private chatService: ChatService,
   private storageService : StorageService,
@@ -31,27 +31,14 @@ export class ChatWindowComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedChat'] && changes['selectedChat'].currentValue) {
       this.selectedChat = changes['selectedChat'].currentValue;
-      console.log('Selected Chat:', this.selectedChat);
       this.messages = [];
       // Disconnect & Reconnect socket for the new chat
       this.reconnectSocket();
-      this.messageHistory();
+      this.readMessages();
+      this.seenMessage();
+      this.emitCheckMessages();
+      // this.getOnlineStatus();
     }
-  }
-  
-  // RECONNECT SOCKET WHEN SWITCHING USERS
-  reconnectSocket() {
-    console.log('Reconnecting socket for new chat...');
-  
-    // Step 1: Disconnect current socket
-    this.chatService.disconnect();
-     
-    // Step 2: Reconnect and register the new user
-    setTimeout(() => {
-      this.chatService.connect();
-      this.chatService.registerUser(this.currentUser);
-      this.listenForMessages();
-    }, 500); 
   }
   
 
@@ -59,26 +46,41 @@ export class ChatWindowComponent {
    setTimeout(() => {
     this.messageHistory();
    }, 3000); 
-    this.listenForMessages();
     this.registerUser();
+    this.listenForMessages();
     this.getConnection();
-    this.getMessages()
+    this.getMessages();
+    this.getOnlineUsers();
+    this.getUnseenMessages();
   }
 
 
-  // GET USER HISTORY MESSAGES
-  messageHistory() {
-    console.log("this.selectedChat", this.selectedChat);
+    // RECONNECT SOCKET WHEN SWITCHING USERS
+    reconnectSocket() {
+      console.log('Reconnecting socket for new chat...');
+      // Step 1: Disconnect current socket
+      this.chatService.disconnect();
+      // Step 2: Reconnect and register the new user
+      setTimeout(() => {
+        this.chatService.connect();
+        this.chatService.registerUser(this.currentUser);
+        this.listenForMessages();
+        this.messageHistory();
+      }, 500); 
+    }
     
+
+
+  // GET USER HISTORY MESSAGES
+  messageHistory() {    
     const payload = {
       sender_id: this.currentUser,
-      receiver_id: this.selectedChat.people_id
+      receiver_id: this.selectedChat?.people_id
     };
   
     this.chatService.getMessageHistory(payload).subscribe((res: any) => {
-      if (res.status == 200) {
-        console.log('res', res.data);
-  
+      console.log('message',res)
+      if (res.status == 200) {  
         // Combine sender and receiver messages
         const combinedMessages = [
           ...res.data.receiver_messages, 
@@ -89,8 +91,8 @@ export class ChatWindowComponent {
         this.messages = combinedMessages.sort((a, b) => 
           new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
         );
+        console.log('this.messages', this.messages)
   
-        console.log('Sorted messages:', this.messages);
       }
     });
   }
@@ -98,7 +100,6 @@ export class ChatWindowComponent {
   // LISTEN FOR MESSAGES
   listenForMessages() {
     this.chatService.listenForMessages().subscribe((message) => {
-      console.log('New message received:', message);
       this.messages.push(message);
     });
   }
@@ -122,31 +123,25 @@ export class ChatWindowComponent {
     this.chatService.getMessages().subscribe(messages => {
       this.messageHistory();
       // this.messages = messages;
-      console.log('this.messages', this.messages)
-      console.log('current User', this.currentUser)
     });
   }
   sendMessage(): void {
-    console.log('this.newmeeage', this.newMessage)
 
-    // if (this.newMessage.trim()) {
+    if (this.newMessage.trim()) {
       this.chatService.sendMessage(this.currentUser,this.selectedChat.people_id,this.newMessage);
       // this.messages.push({
       //   senderId: this.currentUser,
       //   message : this.newMessage})
+      this.messageHistory();  
       this.newMessage = '';
       // this.getMessages();
-      console.log('this.messages', this.messages)
-    // }
-    this.messageHistory();
+    }
   }
 
   // getMessages() {
   //   this.chatService.getMessages().subscribe((messages: any[]) => {
-  //     // console.log('messages',messages)
-  //     // console.log('this.message', this.messages)
+
   //     this.messages.push(messages)
-  //     console.log('this.messages', this.messages)
   //     // this.messages.push(...messages); // Spread operator to add multiple messages
   //   });
   // }
@@ -160,6 +155,86 @@ export class ChatWindowComponent {
   logout(){
     this.storageService.removeItem('user');
     this.router.navigate(['/login'])
+    }
+
+    // GET ONLINE STATUS
+    getOnlineUsers(){
+      this.chatService.getOnlineUsers().subscribe((users:any) => {
+        // this.onlineUsers.push(users);
+        if(users.users.includes(this.selectedChat?.people_id)){
+          this.isUserOnline = true;
+        } else {
+          this.isUserOnline = false;
+        }
+      });
+      
+      this.chatService.getOfflineUsers().subscribe((user) => {
+        console.log('User who went offline:', user);
+        if(user === this.selectedChat?.people_id){
+          this.isUserOnline = false;
+        }
+      }); 
+    }
+
+    // FILE UPLOAD FEATURE
+
+    handleFileUpload(event: any) {
+      const file = event.target.files[0];
+      if (file) {
+        console.log("Selected file:", file);
+    
+        // You can now send the file to your backend via WebSockets or API
+        this.uploadFile(file);
+      }
+    }
+    
+    uploadFile(file: File) {
+      const formData = new FormData();
+      formData.append('file', file);
+    
+      // Example: Sending file through WebSocket
+      // this.chatService.sendFileMessage(formData);
+    }
+
+    sendFileMessage(fileData: FormData) {
+      // if (this.socket.connected) {
+      //   this.socket.emit('send_file', fileData);
+      // } else {
+      //   console.warn('WebSocket is not connected.');
+      // }
+    }
+
+    // check user online
+    // checkUserOnline(){
+    // if(this.onlineUsers.includes(this.selectedChat.people_id)){
+    //   return "Online"
+    // } else{
+    //   return "Offline";
+    // }
+    // // console.log('this.selectChat', this.selectedChat)
+    // }
+
+    // READ MESSAGES WHEN CHAT
+    readMessages(){
+      console.log(this.messages)
+        // this.chatService.messageSeen()
+    }
+    messageId:any
+
+    getUnseenMessages(){
+      this.chatService.getUnseenMessages().subscribe((res:any)=>{
+        this.messageId = res;
+        console.log('messageId',res)
+      })
+    }
+
+    seenMessage(){
+     this.chatService.seenMessage(this.messageId)
+    }
+
+    // EMIT CHECK MESSAGE EVENT
+    emitCheckMessages(){
+      this.chatService.emitCheckMessageEvent(this.selectedChat)
     }
  
 }

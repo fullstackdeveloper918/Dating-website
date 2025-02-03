@@ -10,8 +10,9 @@
           class="w-12 h-12 rounded-full object-cover"
         />
         <div>
-          <h3 class="text-lg font-semibold text-gray-800">{{ selectedChat?.name }}</h3>
-          <p class="text-sm text-green-500">Online</p>
+          <h3 class="text-lg font-semibold text-gray-800">{{ selectedChat?.username }}</h3>
+          <p class="text-sm text-green-500">{{isUserOnline ? "Online" : "Offline"}}</p>
+          <i class="fa fa-circle"></i>
         </div>  
       </div>
       <button
@@ -27,21 +28,55 @@
       <div class="flex-1 overflow-y-auto p-6 bg-gray-50 space-y-4">
         <div *ngFor="let message of messages">
           <div
-  [ngClass]="{
-    'sent-message': message.sender_id === currentUser,
-    'received-message': message.sender_id !== currentUser
-  }"
->
+            [ngClass]="{
+              'sent-message': message.sender_id === currentUser,
+              'received-message': message.sender_id !== currentUser
+            }"
+          >
             <div class="message-box">
-              {{ message.message }}
+              <div class="message-text">{{ message.message }}</div>
+              <div class="message-timestamp">
+                {{ message.timestamp | date:'shortTime' }} <!-- Formats the timestamp -->
+              </div>
             </div>
           </div>
         </div>
-        
       </div>
+      
     
       <!-- Message Input -->
       <div class="p-4 bg-white border-t flex items-center space-x-3">
+        <!-- File Input (Hidden) -->
+        <input
+          type="file"
+          #fileInput
+          (change)="handleFileUpload($event)"
+          class="hidden"
+          accept="image/*, video/*, .pdf, .doc, .docx"
+        />
+      
+        <!-- Upload Button -->
+        <button
+          (click)="fileInput.click()"
+          class="p-3 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400 shadow-md transition duration-200"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="w-5 h-5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 16v-4m0 0V8m0 4h4m-4 0H8m12 4a4 4 0 10-8 0m8 0a4 4 0 11-8 0m-4 0a4 4 0 108 0m-8 0a4 4 0 118 0"
+            />
+          </svg>
+        </button>
+      
+        <!-- Message Input -->
         <input
           type="text"
           [(ngModel)]="newMessage"
@@ -49,6 +84,8 @@
           class="flex-1 p-3 border rounded-full shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
           (keydown.enter)="sendMessage()"
         />
+      
+        <!-- Send Button -->
         <button
           (click)="sendMessage()"
           class="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 shadow-md transition duration-200"
@@ -69,5 +106,6 @@
           </svg>
         </button>
       </div>
+      
     </div>
     

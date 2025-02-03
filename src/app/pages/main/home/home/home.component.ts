@@ -26,7 +26,6 @@ export class HomeComponent {
       if (response.status == 200) {
         console.log('response',response.data[0])
         this.userList = response.data;
-        // console.log('this.userlist',this.userList)
       } 
     } catch (error) {
       this.toastr.error('Error fetching users');

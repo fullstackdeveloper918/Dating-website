@@ -13,6 +13,10 @@ export class ChatService {
   private socket!: Socket;
   private connectionStatus = new BehaviorSubject<string>('Disconnected');
   private messages = new BehaviorSubject<any[]>([]);
+  private onlineUsers = new BehaviorSubject<any[]>([]); 
+  private offlineUsers = new BehaviorSubject<any | null>(null); // Store offline user
+  unSeenMessages = new BehaviorSubject<any | null>(null);
+
 
   constructor(private _apiService : ApiService) {
     this.connect();
@@ -40,18 +44,64 @@ export class ChatService {
     //   console.log('New message received:', message);
     //   this.messages.next([...this.messages.value, message]);
     // });
-    this.socket.on('receive_message', ({senderId, message}) => {
-      console.log('senderId',senderId)
-      console.log('message', message)
+    this.socket.on('receive_message', (data) => {
+      console.log('data',data)
       // this.messages.next([...this.messages.value, message]);
     });
     this.socket.on('user_typing', (data) => {
       console.log(`User ${data.senderId} is typing...`);
     });
+    this.socket.on('unseen_message_count', (data)=>{
+      console.log('unseen message count', data)
+    })
+
+     // Listen for online users
+     this.socket.on('update_user_count', (users: any[]) => {
+      console.log('online uers',users)
+      this.onlineUsers.next(users); // Update observable
+    });
+
+    // Listen for offline user
+    this.socket.on('user_offline', (user: any) => {
+      this.offlineUsers.next(user); // Update observable
+    });
+
+    this.socket.on('message_seen', (data:any)=>{
+      this.unSeenMessages.next(data)
+      console.log('messageseen',data)
+    })
+
+    this.socket.on('unseen_count',(data:any)=>{
+      console.log('data',data)
+    })
+
+    this.socket.on('unseen_message_count', (data:any)=>{
+      console.log('data',data)
+    })
+
+
+
   }
 
+  // GET UNSEEN MESSAGES
+  getUnseenMessages(){
+    return this.unSeenMessages.asObservable();
+  }
+
+
+
+    /** GET ONLINE USERS AS OBSERVABLE */
+    getOnlineUsers(): Observable<any[]> {
+      return this.onlineUsers.asObservable();
+    } 
+  
+    /** GET OFFLINE USER AS OBSERVABLE */
+    getOfflineUsers(): Observable<any | null> {
+      return this.offlineUsers.asObservable();
+    }
+
+
   registerUser(userId: string) {
-    console.log('userId',userId)
     this.socket.emit('register', userId);
   }
 
@@ -72,8 +122,6 @@ export class ChatService {
     // this.listenForMessages();
   }
   // sendMessage(senderId: string, receiverId: string, message: string) {
-  //   console.log('senderId',senderId);
-  //   console.log('receiverId',receiverId)
   //   this.socket.emit('send_message', { senderId, receiverId, message });
   // }
   sendTyping(senderId: string, receiverId: string) {
@@ -97,7 +145,6 @@ export class ChatService {
     }
 
     listenForMessages(): Observable<string> {
-      console.log('this is working')
       return new Observable((observer) => {
         this.socket.on('receive_message', (data) => {
           console.log('data',data)
@@ -116,4 +163,31 @@ export class ChatService {
   getMessageHistory(payload:any){
    return this._apiService.post(apiRoutes.message_list, payload)
   }
+
+  // MARK AS SEEN
+  viewMessage(senderId:any, recipientId:any){
+    console.log('senderId',senderId)
+    setTimeout(()=>{
+      this.socket.emit('mark_as_seen', {senderId, recipientId})
+    }, 5000)
+  }
+
+  // Emit seen message event
+  seenMessage(messageId:any){
+    console.log('messageId1', messageId)
+    setTimeout(()=>{
+      console.log('messageId2', messageId)
+      this.socket.emit('message_seen',messageId)
+    },2000)
+
+  }
+
+  // EMIT CHECK MESSAGE EVENT
+  emitCheckMessageEvent(selectedChatId:any){
+   console.log('seletechat',selectedChatId.people_id)
+   setTimeout(() => {  
+    this.socket.emit('check_messages', selectedChatId.people_id)
+   }, 2000);
+  }
+
 }

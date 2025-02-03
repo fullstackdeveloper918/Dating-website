@@ -18,7 +18,6 @@ export class UserService {
 
   // UPDATE USER PROFILE
   updateUserInfo(formData:any){
-    console.log('fomdata',formData)
    return this.apiService.post(apiRoutes.updateUserProfile, formData)
   }
 }

@@ -37,7 +37,6 @@ export class SignUpComponent {
 
   // SIGN UP
   register() {
-    console.log('working', this.signUpForm.get('userName')?.valid);
     if (this.signUpForm.valid) {
       try {
         this._authService.register(this.signUpForm.value).subscribe(
@@ -62,12 +61,9 @@ export class SignUpComponent {
 
   // CHECK REFERRAL CODE
   onReferralCodeChange(event: any): void {
-    const referralCode = event.target.value;
-    console.log(referralCode.length);
-      
+    const referralCode = event.target.value;      
     // Check if the referral code length is 6
     if (referralCode && referralCode.length === 6) {
-      console.log('event', referralCode);
       const payload = {
         referralCode: referralCode,
       };
@@ -81,7 +77,6 @@ export class SignUpComponent {
     try {
       // Make the API call
       const response = await this._authService.checkReferralCode(payload).toPromise();
-      console.log('API response', response);
       // Handle the API response here
     } catch (error:any) {
       this.toastr.error(error.error.message)
@@ -94,7 +89,6 @@ export class SignUpComponent {
 
   resetPassword(event: Event): void {
     event.preventDefault();
-    console.log('Reset password clicked');
     // Implement reset password logic
   }
 }

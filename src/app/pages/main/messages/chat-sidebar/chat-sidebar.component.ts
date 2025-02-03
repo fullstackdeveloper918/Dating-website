@@ -11,6 +11,7 @@ export class ChatSidebarComponent {
   selectedChat:any
   chatList : any[] = [
   ];
+  onlineUsers:any
 
   @Output() chatSelected = new EventEmitter<any>();
 
@@ -19,6 +20,7 @@ export class ChatSidebarComponent {
 
   ngOnInit(){
     this.getUsers();
+    this.getOnlineUsers();
   }
   
   selectChat(chat: any) {
@@ -30,6 +32,7 @@ export class ChatSidebarComponent {
   getUsers(){
    this._chatService.getUsers().subscribe((user:any)=>{
     this.chatList = user.data;
+    console.log('this.chatlist', this.chatList)
     this.selectedChat = user.data[0]
     this.chatSelected.emit(this.selectedChat);
    })
@@ -39,5 +42,13 @@ export class ChatSidebarComponent {
     return this.chatList.filter(chat => 
       chat.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
+  }
+
+  // GET ONLINE USERS
+  getOnlineUsers(){
+    this._chatService.getOnlineUsers().subscribe((users:any) => {
+      this.onlineUsers = users.users
+      console.log('online users', users)
+    })
   }
 }

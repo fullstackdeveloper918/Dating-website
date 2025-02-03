@@ -64,7 +64,6 @@ export class VerifyEmailComponent {
           this.router.navigate(['/login'])
         }
       })
-      console.log('Entered Code:', payload);
       // Call API to verify the code
     } else {
       this.verifyForm.markAllAsTouched();
@@ -88,7 +87,6 @@ export class VerifyEmailComponent {
           if(res.status == 200){
             this.toastr.success(res.message)
           }
-          console.log('res', res);
         },
         error: (err) => {
           console.error('Error occurred while resending the code:', err);

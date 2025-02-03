@@ -47,7 +47,6 @@ export class AddReferralCodeComponent {
   
     try {
       const response = await this.refferalCodeService.addReferralCode(payload).toPromise();
-      console.log('Response:', response);
       if (response.status === 200) {
         this.dialogRef.close('success');
       }

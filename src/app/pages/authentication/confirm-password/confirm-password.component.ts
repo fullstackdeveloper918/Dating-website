@@ -29,8 +29,6 @@ export class ConfirmPasswordComponent {
       this.email = params['email'];
       this.token = params['token'];
     });
-    console.log('email',this.email);
-    console.log('token',this.token)
   }
 
   // confirmPasswordValidator = (control: any) => {
@@ -58,7 +56,6 @@ export class ConfirmPasswordComponent {
         }
       })
       // Handle form submission here
-      console.log(this.passwordForm.value);
     }
   }
 }

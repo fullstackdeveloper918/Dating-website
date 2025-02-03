@@ -23,9 +23,12 @@
     >
       <img src="https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png" 
         alt="Avatar" class="w-12 h-12 rounded-full border mr-3" />
-      <div class="flex-1">
+      <div class="flex justify-between w-full">
         <h3 class="text-lg font-semibold text-gray-800">{{ chat.username }}</h3>
-      </div>
+        <i class="fa fa-circle" 
+        [ngStyle]="{'color': onlineUsers.includes(chat.people_id) ? 'green' : 'gray'}">
+     </i>      
+    </div>
     </div>
   </div>
 </div>

@@ -21,7 +21,6 @@ export class AppComponent {
 
   //   this.auth.signInWithEmailAndPassword(email, password)
   //     .then((userCredential) => {
-  //       console.log('Sign-in successful:', userCredential.user);
   //       alert('Firebase connection successful! User signed in.');
   //     })
   //     .catch((error) => {
