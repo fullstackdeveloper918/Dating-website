@@ -2,8 +2,8 @@
  
  <div class="flex-1 flex flex-col h-screen bg-gray-100">
       <!-- Chat Header -->
-       <div class="flex" style="width: 100% !important;">
-      <div class="p-4 bg-white shadow-md flex items-center space-x-4">
+       <div class="flex">
+      <div class="p-4 bg-white shadow-md flex items-center space-x-4 w-full">
         <img
           src="https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png"
           alt="Avatar"
@@ -11,8 +11,10 @@
         />
         <div>
           <h3 class="text-lg font-semibold text-gray-800">{{ selectedChat?.username }}</h3>
+          <div class="flex gap-3">
+            <i class="fa fa-circle" [ngStyle]="{'color': isUserOnline ? 'green' : 'gray'}"></i>
           <p class="text-sm text-green-500">{{isUserOnline ? "Online" : "Offline"}}</p>
-          <i class="fa fa-circle"></i>
+        </div>
         </div>  
       </div>
       <button

@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
+import { timestamp } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { ChatService } from 'src/app/core/service/chat.service';
 import { StorageService } from 'src/app/core/service/storage/storage.service';
@@ -36,7 +37,7 @@ export class ChatWindowComponent {
       this.reconnectSocket();
       this.readMessages();
       this.seenMessage();
-      this.emitCheckMessages();
+      // this.emitCheckMessages();
       // this.getOnlineStatus();
     }
   }
@@ -52,6 +53,8 @@ export class ChatWindowComponent {
     this.getMessages();
     this.getOnlineUsers();
     this.getUnseenMessages();
+    this.receiveMessage();
+    // this.getOfflineMessages();
   }
 
 
@@ -68,6 +71,18 @@ export class ChatWindowComponent {
         this.messageHistory();
       }, 500); 
     }
+
+    // RECEIVE MESSAGES
+    receiveMessage(){
+      this.chatService.receiveMessages().subscribe((res:any)=>{
+        // this.messages.push(res)
+        if(res.sender_id == this.selectedChat.people_id){
+          this.messages.push(res)
+        }
+        console.log('this.message', this.messages)
+        console.log('recievemessage', res)
+      })
+    }
     
 
 
@@ -79,7 +94,6 @@ export class ChatWindowComponent {
     };
   
     this.chatService.getMessageHistory(payload).subscribe((res: any) => {
-      console.log('message',res)
       if (res.status == 200) {  
         // Combine sender and receiver messages
         const combinedMessages = [
@@ -91,7 +105,6 @@ export class ChatWindowComponent {
         this.messages = combinedMessages.sort((a, b) => 
           new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
         );
-        console.log('this.messages', this.messages)
   
       }
     });
@@ -100,7 +113,7 @@ export class ChatWindowComponent {
   // LISTEN FOR MESSAGES
   listenForMessages() {
     this.chatService.listenForMessages().subscribe((message) => {
-      this.messages.push(message);
+      // this.messages.push(message);
     });
   }
 
@@ -129,11 +142,15 @@ export class ChatWindowComponent {
 
     if (this.newMessage.trim()) {
       this.chatService.sendMessage(this.currentUser,this.selectedChat.people_id,this.newMessage);
-      // this.messages.push({
-      //   senderId: this.currentUser,
-      //   message : this.newMessage})
-      this.messageHistory();  
+      this.messages.push({
+        sender_id: this.currentUser,
+        message : this.newMessage,
+        receiver_id : this.selectedChat.people_id,
+        timestamp : Date.now()
+      })
+      // this.messageHistory();  
       this.newMessage = '';
+      this.emitCheckMessages();
       // this.getMessages();
     }
   }
@@ -169,7 +186,6 @@ export class ChatWindowComponent {
       });
       
       this.chatService.getOfflineUsers().subscribe((user) => {
-        console.log('User who went offline:', user);
         if(user === this.selectedChat?.people_id){
           this.isUserOnline = false;
         }
@@ -181,7 +197,6 @@ export class ChatWindowComponent {
     handleFileUpload(event: any) {
       const file = event.target.files[0];
       if (file) {
-        console.log("Selected file:", file);
     
         // You can now send the file to your backend via WebSockets or API
         this.uploadFile(file);

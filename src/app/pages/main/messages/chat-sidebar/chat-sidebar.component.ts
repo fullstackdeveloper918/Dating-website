@@ -32,7 +32,6 @@ export class ChatSidebarComponent {
   getUsers(){
    this._chatService.getUsers().subscribe((user:any)=>{
     this.chatList = user.data;
-    console.log('this.chatlist', this.chatList)
     this.selectedChat = user.data[0]
     this.chatSelected.emit(this.selectedChat);
    })
@@ -48,7 +47,6 @@ export class ChatSidebarComponent {
   getOnlineUsers(){
     this._chatService.getOnlineUsers().subscribe((users:any) => {
       this.onlineUsers = users.users
-      console.log('online users', users)
     })
   }
 }

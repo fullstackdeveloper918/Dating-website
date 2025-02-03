@@ -16,6 +16,7 @@ export class ChatService {
   private onlineUsers = new BehaviorSubject<any[]>([]); 
   private offlineUsers = new BehaviorSubject<any | null>(null); // Store offline user
   unSeenMessages = new BehaviorSubject<any | null>(null);
+  receiveMessage = new BehaviorSubject<any | null>(null);
 
 
   constructor(private _apiService : ApiService) {
@@ -74,9 +75,14 @@ export class ChatService {
     this.socket.on('unseen_count',(data:any)=>{
       console.log('data',data)
     })
-
+    
     this.socket.on('unseen_message_count', (data:any)=>{
-      console.log('data',data)
+      console.log('unseen message count',data)
+    })
+
+    this.socket.on('receive_message', (data)=>{
+      this.receiveMessage.next(data)
+      // console.log('data', data);
     })
 
 
@@ -86,6 +92,12 @@ export class ChatService {
   // GET UNSEEN MESSAGES
   getUnseenMessages(){
     return this.unSeenMessages.asObservable();
+  }
+
+
+  // receive message
+  receiveMessages(){
+    return this.receiveMessage.asObservable();
   }
 
 
@@ -179,7 +191,7 @@ export class ChatService {
       console.log('messageId2', messageId)
       this.socket.emit('message_seen',messageId)
     },2000)
-
+    // this.getMessageHistory();
   }
 
   // EMIT CHECK MESSAGE EVENT
