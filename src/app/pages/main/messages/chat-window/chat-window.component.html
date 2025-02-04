@@ -1,6 +1,6 @@
  current users : {{currentUserName}}
  
- <div class="flex-1 flex flex-col h-screen bg-gray-100">
+ <div #chatContainer class="flex-1 flex flex-col bg-gray-100" style="height: 86vh;">
       <!-- Chat Header -->
        <div class="flex">
       <div class="p-4 bg-white shadow-md flex items-center space-x-4 w-full">
@@ -27,8 +27,14 @@
       
     
       <!-- Messages -->
-      <div class="flex-1 overflow-y-auto p-6 bg-gray-50 space-y-4">
+      <div  class="flex-1 overflow-y-auto p-6 bg-gray-50 space-y-4">
         <div *ngFor="let message of messages">
+          
+          <!-- Show Date Header -->
+          <div *ngIf="message.dateHeader" class="date-header">
+            {{ message.dateHeader }}
+          </div>
+      
           <div
             [ngClass]="{
               'sent-message': message.sender_id === currentUser,
@@ -38,14 +44,19 @@
             <div class="message-box">
               <div class="message-text">{{ message.message }}</div>
               <div class="message-timestamp">
-                {{ message.timestamp | date:'shortTime' }} <!-- Formats the timestamp -->
+                {{ message.timestamp | timeAgo }} <!-- Formats the timestamp -->
               </div>
             </div>
           </div>
+      
         </div>
       </div>
       
+      
     
+    
+    </div>
+
       <!-- Message Input -->
       <div class="p-4 bg-white border-t flex items-center space-x-3">
         <!-- File Input (Hidden) -->
@@ -109,5 +120,4 @@
         </button>
       </div>
       
-    </div>
     

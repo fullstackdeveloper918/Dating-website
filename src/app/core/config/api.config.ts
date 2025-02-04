@@ -18,4 +18,8 @@ export const apiRoutes = {
 
     // get message list
     message_list : 'messages/message-list'
+
+
+    // unssen message count
+    
 }

@@ -10,6 +10,7 @@ import { environment } from 'src/environment';
 import { ToastrModule } from 'ngx-toastr';  // Import ToastrModule
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Import this module
 import { LoaderService } from './core/service/loader/loader.service';
+import { TimeAgoPipe } from './core/pipe/time-ago.pipe';
 
 
 

@@ -202,4 +202,9 @@ export class ChatService {
    }, 2000);
   }
 
+
+  // GET ONINE MESSAGES AND COUNTER
+  // getOfflineMessagesAndCounter(){
+  //   this._apiService.getAll(apiRoutes.)
+  // }
 }

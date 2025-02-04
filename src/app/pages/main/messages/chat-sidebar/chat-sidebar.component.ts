@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { ChatService } from 'src/app/core/service/chat.service';
 
 @Component({
@@ -18,29 +19,34 @@ export class ChatSidebarComponent {
 
   @Output() chatSelected = new EventEmitter<any>();
 
-  constructor( private _chatService : ChatService){
+  constructor(
+  private _chatService : ChatService,
+  private toast: ToastrService){
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['newMessage'] && changes['newMessage'].currentValue) {
-      this.latestMessage = changes['newMessage'].currentValue;
-      console.log('Updated latestMessage:', this.latestMessage);
+    // if (changes['newMessage'] && changes['newMessage'].currentValue) {
+    //   this.latestMessage = changes['newMessage'].currentValue;
+    //   console.log('Updated latestMessage:', this.latestMessage);
 
-      // Increase the count for the matching chat.people_id
-      if (this.latestMessage?.sender_id) {
-        if (!this.unreadCounts[this.latestMessage.sender_id]) {
-          this.unreadCounts[this.latestMessage.sender_id] = 0;
-        }
-        this.unreadCounts[this.latestMessage.sender_id]++; 
-      }
-    }
+    //   // Increase the count for the matching chat.people_id
+    //   if (this.latestMessage?.sender_id) {
+    //     if (!this.unreadCounts[this.latestMessage.sender_id]) {
+    //       this.unreadCounts[this.latestMessage.sender_id] = 0;
+    //     }
+    //     this.unreadCounts[this.latestMessage.sender_id]++; 
+    //   }
+    // }
   }
 
 
   ngOnInit(){
     this.getUsers();
     this.getOnlineUsers();
+    this.receiveMessage();
+    // this.messageCountApi();
   }
+
 
   // increase count
   increaseCount(chat:any){
@@ -50,6 +56,13 @@ export class ChatSidebarComponent {
   selectChat(chat: any) {
     this.chatSelected.emit(chat);
     this.selectedChat = chat; 
+    this.clearCount(chat);
+  }
+
+  clearCount(chat: any) {
+    if (this.unreadCounts[chat.people_id]) {
+      this.unreadCounts[chat.people_id] = 0; 
+    }
   }
 
 
@@ -73,4 +86,40 @@ export class ChatSidebarComponent {
       this.onlineUsers = users.users
     })
   }
+
+  // increase counter 
+
+  receiveMessage(){
+    this._chatService.receiveMessages().subscribe((res:any)=>{
+      // this.messages.push(res)
+      this.latestMessage = res;
+      console.log('Updated latestMessage:', this.latestMessage);
+
+      // Increase the count for the matching chat.people_id
+      if (this.latestMessage?.sender_id && this.latestMessage.sender_id!=this.selectedChat.people_id) {
+        const sender = this.chatList.find((user: any) => user.people_id === this.latestMessage.sender_id);
+        const senderName = sender ? sender.username : 'Unknown';
+  
+        // Show toast notification with sender's name
+        this.showNotification(senderName, this.latestMessage.message);
+        if (!this.unreadCounts[this.latestMessage.sender_id]) {
+          this.unreadCounts[this.latestMessage.sender_id] = 0;
+        }
+        this.unreadCounts[this.latestMessage.sender_id]++; 
+      }
+    })
+  }
+
+  // SHOW NOTIFICATION
+  showNotification(senderName: string, messageText: string) {
+    this.toast.success(`${senderName}: ${messageText}`, 'New Message', {
+      timeOut: 3000, // Adjust timeout as needed
+      positionClass: 'toast-top-right',
+    });
+  }
+
+  // MESSAGE COUNT API
+  // messageCountApi(){
+  //   this._chatService.getOfflineMessagesAndCounter()
+  // }
 }

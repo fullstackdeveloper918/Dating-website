@@ -1,10 +1,12 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { timestamp } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { ChatService } from 'src/app/core/service/chat.service';
 import { StorageService } from 'src/app/core/service/storage/storage.service';
 import { apiUrl } from 'src/environment';
+import { format, isToday, isYesterday } from 'date-fns';
+
 
 @Component({
   selector: 'app-chat-window',
@@ -12,6 +14,7 @@ import { apiUrl } from 'src/environment';
   styleUrls: ['./chat-window.component.scss']
 })
 export class ChatWindowComponent {
+  @ViewChild('chatContainer') chatContainer!: ElementRef;
   @Input() selectedChat: any;   // user 2
   @Output() newMessages = new EventEmitter<any>();
   connectionStatus: string = 'Disconnected';
@@ -58,8 +61,28 @@ export class ChatWindowComponent {
     this.getOnlineUsers();
     this.getUnseenMessages();
     this.receiveMessage();
+
     // this.getOfflineMessages();
   }
+
+  ngAfterViewInit() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom() {
+    setTimeout(() => {
+      if (this.chatContainer) {
+        this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+      }
+    }, 100); // Small delay to ensure DOM updates
+  }
+
+  // Call this method when clicking on a chat
+  onChatClick() {
+    this.scrollToBottom();
+  }
+
+
 
 
     // RECONNECT SOCKET WHEN SWITCHING USERS
@@ -111,6 +134,34 @@ export class ChatWindowComponent {
           new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
         );
   
+        // Process messages to add date headers
+        this.groupMessagesByDate();
+  
+        console.log('this.messages', this.messages);
+      }
+    });
+  }
+  
+  groupMessagesByDate() {
+    let lastDate: string | null = null;
+    
+    this.messages = this.messages.map((message) => {
+      const messageDate = new Date(message.timestamp);
+      let formattedDate: string;
+  
+      if (isToday(messageDate)) {
+        formattedDate = 'Today';
+      } else if (isYesterday(messageDate)) {
+        formattedDate = 'Yesterday';
+      } else {
+        formattedDate = format(messageDate, 'dd-MM-yyyy'); // Exact date for older messages
+      }
+  
+      if (formattedDate !== lastDate) {
+        lastDate = formattedDate;
+        return { ...message, dateHeader: formattedDate };
+      } else {
+        return { ...message, dateHeader: null };
       }
     });
   }
