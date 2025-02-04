@@ -39,6 +39,7 @@ export class ChatWindowComponent {
       this.readMessages();
       this.seenMessage();
       this.emitCheckMessages();
+      this.setCounterZero();
       // this.checkMessageEvent();
       // this.emitCheckMessages();
       // this.getOnlineStatus();
@@ -259,5 +260,10 @@ export class ChatWindowComponent {
     // checkMessageEvent(){
     //   this.chatService.emit
     // }
+
+    // SET COUNTER ZERO FOR MESSAGES
+    setCounterZero(){
+      
+    }
  
 }
