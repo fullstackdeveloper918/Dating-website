@@ -1,9 +1,9 @@
  current users : {{currentUserName}}
  
- <div #chatContainer class="flex-1 flex flex-col bg-gray-100" style="height: 86vh;">
+ <div #chatContainer class="flex-1 flex flex-col bg-white" style="height: 86vh;">
       <!-- Chat Header -->
-       <div class="flex">
-      <div class="p-4 bg-white shadow-md flex items-center space-x-4 w-full">
+       <div class="flex items-center bg-white px-2">
+      <div class="p-4 bg-white flex items-center space-x-4 w-full">
         <img
           src="https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png"
           alt="Avatar"
@@ -12,7 +12,7 @@
         <div>
           <h3 class="text-lg font-semibold text-gray-800">{{ selectedChat?.username }}</h3>
           <div class="flex gap-3">
-            <i class="fa fa-circle" [ngStyle]="{'color': isUserOnline ? 'green' : 'gray'}"></i>
+            <!-- <i class="fa fa-circle" [ngStyle]="{'color': isUserOnline ? 'green' : 'gray'}"></i> -->
           <p class="text-sm text-green-500">{{isUserOnline ? "Online" : "Offline"}}</p>
         </div>
         </div>  
@@ -28,10 +28,10 @@
     
       <!-- Messages -->
       <div  class="flex-1 overflow-y-auto p-6 bg-gray-50 space-y-4">
-        <div *ngFor="let message of messages">
+        <div *ngFor="let message of messages" class="date-header-wrap">
           
           <!-- Show Date Header -->
-          <div *ngIf="message.dateHeader" class="date-header">
+          <div *ngIf="message.dateHeader" class="date-header inline-block mx-auto">
             {{ message.dateHeader }}
           </div>
       
