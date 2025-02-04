@@ -44,7 +44,7 @@ export class ChatSidebarComponent {
     this.getUsers();
     this.getOnlineUsers();
     this.receiveMessage();
-    // this.messageCountApi();
+    this.messageCountApi();
   }
 
 
@@ -119,7 +119,25 @@ export class ChatSidebarComponent {
   }
 
   // MESSAGE COUNT API
-  // messageCountApi(){
-  //   this._chatService.getOfflineMessagesAndCounter()
-  // }
+  messageCountApi() {
+    this._chatService.getOfflineMessagesAndCounter().subscribe((res: any) => {
+      console.log('res', res);
+  
+      if (res.status === 200 && Array.isArray(res.data)) {
+        res.data.forEach((msg: any) => {
+          if (msg.senderId && msg.count) {
+            console.log('Updating count for sender:', msg.senderId);
+            let senderId = msg.senderId;
+            let count = parseInt(msg.count, 10); // Convert count to a number
+  
+            // Update unreadCounts by increasing the count
+            this.unreadCounts[senderId] = (this.unreadCounts[senderId] || 0) + count;
+          }
+        });
+  
+        console.log('Updated unreadCounts:', this.unreadCounts);
+      }
+    });
+  }
+  
 }

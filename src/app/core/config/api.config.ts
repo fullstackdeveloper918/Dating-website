@@ -17,9 +17,12 @@ export const apiRoutes = {
     addReferralCode : 'referral/add',
 
     // get message list
-    message_list : 'messages/message-list'
+    message_list : 'messages/message-list',
 
 
     // unssen message count
+
+    unseenMessageCount: 'messages/unseen-message-count'
+
     
 }

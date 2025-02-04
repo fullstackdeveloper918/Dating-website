@@ -204,7 +204,7 @@ export class ChatService {
 
 
   // GET ONINE MESSAGES AND COUNTER
-  // getOfflineMessagesAndCounter(){
-  //   this._apiService.getAll(apiRoutes.)
-  // }
+  getOfflineMessagesAndCounter(){
+   return this._apiService.getAll(apiRoutes.unseenMessageCount)
+  }
 }

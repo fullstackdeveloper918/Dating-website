@@ -15,6 +15,7 @@ import { format, isToday, isYesterday } from 'date-fns';
 })
 export class ChatWindowComponent {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
+  @ViewChild('messageList') messageList!: ElementRef;
   @Input() selectedChat: any;   // user 2
   @Output() newMessages = new EventEmitter<any>();
   connectionStatus: string = 'Disconnected';
@@ -24,13 +25,14 @@ export class ChatWindowComponent {
   // selectedChat = { id: 'user2' };
   currentUserName:any
   isUserOnline!:boolean
+  showScrollButton = false;
   constructor(
   private chatService: ChatService,
   private storageService : StorageService,
   private router : Router) {
     const user :any = this.storageService.getItem("user");
     this.currentUser = user.data.people_id
-    this.currentUserName = user.data.first_name + " " + user.data.surname
+    this.currentUserName = user.data.username
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -46,6 +48,8 @@ export class ChatWindowComponent {
       // this.checkMessageEvent();
       // this.emitCheckMessages();
       // this.getOnlineStatus();
+      setTimeout(() => this.scrollToBottom(), 100);
+
     }
   }
   
@@ -69,13 +73,22 @@ export class ChatWindowComponent {
     this.scrollToBottom();
   }
 
+  // ngOnChanges() {
+  // }
+
+  checkScroll() {
+    const container = this.messageList.nativeElement;
+    this.showScrollButton = container.scrollHeight - container.scrollTop > container.clientHeight + 100;
+  }
+
   scrollToBottom() {
     setTimeout(() => {
-      if (this.chatContainer) {
-        this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
-      }
-    }, 100); // Small delay to ensure DOM updates
+      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+      this.showScrollButton = false;
+    }, 100);
   }
+
+  
 
   // Call this method when clicking on a chat
   onChatClick() {
@@ -206,6 +219,9 @@ export class ChatWindowComponent {
       })
       // this.messageHistory();  
       this.newMessage = '';
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 100);
       // this.getMessages();
     }
   }
