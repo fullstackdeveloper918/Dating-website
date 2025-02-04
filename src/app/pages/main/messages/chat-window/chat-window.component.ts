@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { timestamp } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
@@ -13,6 +13,7 @@ import { apiUrl } from 'src/environment';
 })
 export class ChatWindowComponent {
   @Input() selectedChat: any;   // user 2
+  @Output() newMessages = new EventEmitter<any>();
   connectionStatus: string = 'Disconnected';
   messages: any[] = [];
   newMessage: string = '';
@@ -37,6 +38,8 @@ export class ChatWindowComponent {
       this.reconnectSocket();
       this.readMessages();
       this.seenMessage();
+      this.emitCheckMessages();
+      // this.checkMessageEvent();
       // this.emitCheckMessages();
       // this.getOnlineStatus();
     }
@@ -79,6 +82,7 @@ export class ChatWindowComponent {
         if(res.sender_id == this.selectedChat.people_id){
           this.messages.push(res)
         }
+        this.newMessages.emit(res);
         console.log('this.message', this.messages)
         console.log('recievemessage', res)
       })
@@ -150,7 +154,6 @@ export class ChatWindowComponent {
       })
       // this.messageHistory();  
       this.newMessage = '';
-      this.emitCheckMessages();
       // this.getMessages();
     }
   }
@@ -251,5 +254,10 @@ export class ChatWindowComponent {
     emitCheckMessages(){
       this.chatService.emitCheckMessageEvent(this.selectedChat)
     }
+
+    // // CHECK MESSAGE EVENT
+    // checkMessageEvent(){
+    //   this.chatService.emit
+    // }
  
 }

@@ -3,7 +3,6 @@
   <div class="p-4 bg-white shadow-md border-b">
     <h2 class="text-2xl font-bold text-gray-800">Chats</h2>
   </div>
-
   <!-- Search Bar -->
   <div class="p-4">
     <input
@@ -13,22 +12,30 @@
       class="w-full p-3 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
     />
   </div>
-
   <!-- Chat List -->
   <div class="flex-1 overflow-y-auto space-y-1 p-2">
-    <div *ngFor="let chat of chatList" 
-      (click)="selectChat(chat)" 
+    <div *ngFor="let chat of chatList"
+      (click)="selectChat(chat)"
       class="flex items-center p-3 rounded-lg cursor-pointer transition duration-200"
-      [ngClass]="{'bg-blue-100': selectedChat === chat, 'hover:bg-gray-200': selectedChat !== chat}"
-    >
-      <img src="https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png" 
-        alt="Avatar" class="w-12 h-12 rounded-full border mr-3" />
-      <div class="flex justify-between w-full">
-        <h3 class="text-lg font-semibold text-gray-800">{{ chat.username }}</h3>
-        <i class="fa fa-circle" 
-        [ngStyle]="{'color': onlineUsers.includes(chat.people_id) ? 'green' : 'gray'}">
-     </i>      
-    </div>
+      [ngClass]="{'bg-blue-100': selectedChat === chat, 'hover:bg-gray-200': selectedChat !== chat}">
+      
+      <img src="https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png"
+        alt="Avatar" class="w-12 h-12 rounded-full border mr-2" />
+  
+      <div class="flex justify-between items-center w-full">
+        <h3 class="text-lg font-semibold text-gray-800 mr-1 flex items-center justify-between">
+          {{ chat.username }}
+          <span *ngIf="unreadCounts[chat.people_id] > 0" 
+                class="chat-count font-medium text-xs text-white rounded-full ml-1 p-1 inline-block"
+                style="font-size: 10px; height: 21px; width: 21px; background-color: green; display: inline-flex; align-items: center; justify-content: center; padding-top: 5px;">
+            {{ unreadCounts[chat.people_id] }}
+          </span>
+        </h3>
+        <i class="fa fa-circle"
+          [ngStyle]="{'color': onlineUsers.includes(chat.people_id) ? 'green' : 'gray'}">
+        </i>
+      </div>
     </div>
   </div>
+  
 </div>

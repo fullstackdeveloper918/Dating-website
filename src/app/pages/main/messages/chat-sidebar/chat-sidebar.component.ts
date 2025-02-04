@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { ChatService } from 'src/app/core/service/chat.service';
 
 @Component({
@@ -7,20 +7,44 @@ import { ChatService } from 'src/app/core/service/chat.service';
   styleUrls: ['./chat-sidebar.component.scss']
 })
 export class ChatSidebarComponent {
+  @Input() newMessage:any
   searchTerm: string = '';
   selectedChat:any
   chatList : any[] = [
   ];
   onlineUsers:any
+  latestMessage: any = null;
+  unreadCounts: { [key: number]: number } = {};
 
   @Output() chatSelected = new EventEmitter<any>();
 
   constructor( private _chatService : ChatService){
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['newMessage'] && changes['newMessage'].currentValue) {
+      this.latestMessage = changes['newMessage'].currentValue;
+      console.log('Updated latestMessage:', this.latestMessage);
+
+      // Increase the count for the matching chat.people_id
+      if (this.latestMessage?.sender_id) {
+        if (!this.unreadCounts[this.latestMessage.sender_id]) {
+          this.unreadCounts[this.latestMessage.sender_id] = 0;
+        }
+        this.unreadCounts[this.latestMessage.sender_id]++; 
+      }
+    }
+  }
+
+
   ngOnInit(){
     this.getUsers();
     this.getOnlineUsers();
+  }
+
+  // increase count
+  increaseCount(chat:any){
+   console.log('chat',chat)
   }
   
   selectChat(chat: any) {
