@@ -22,7 +22,10 @@ export const apiRoutes = {
 
     // unssen message count
 
-    unseenMessageCount: 'messages/unseen-message-count'
+    unseenMessageCount: 'messages/unseen-message-count',
+
+    // get last seen
+    getLastSeen : 'user/single-user'
 
     
 }

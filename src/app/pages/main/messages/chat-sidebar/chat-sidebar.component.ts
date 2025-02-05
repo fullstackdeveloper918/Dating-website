@@ -49,6 +49,8 @@ export class ChatSidebarComponent {
   }
 
 
+
+
   // increase count
   increaseCount(chat:any){
    console.log('chat',chat)
@@ -58,6 +60,8 @@ export class ChatSidebarComponent {
     this.chatSelected.emit(chat);
     this.selectedChat = chat; 
     this.clearCount(chat);
+    // this.getLastSeen(this.selectedChat.people_id)
+    // this.getUsers();
   }
 
   clearCount(chat: any) {
@@ -72,6 +76,7 @@ export class ChatSidebarComponent {
     this.chatList = user.data;
     this.selectedChat = user.data[0]
     this.chatSelected.emit(this.selectedChat);
+    // this.getLastSeen(this.selectedChat.people_id)
    })
   }
 
@@ -147,7 +152,7 @@ export class ChatSidebarComponent {
     this._chatService.getOfflineUsers().subscribe((user) => {
       console.log('offlineuser', user)
       if(user){
-        this.getUsers();
+          this.getUsers();
       }
     }); 
   }

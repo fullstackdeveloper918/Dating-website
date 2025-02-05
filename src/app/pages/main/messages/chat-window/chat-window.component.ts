@@ -40,7 +40,7 @@ export class ChatWindowComponent {
     if (changes['selectedChat'] && changes['selectedChat'].currentValue) {
       this.selectedChat = changes['selectedChat'].currentValue;
       console.log('this.selectedChat', this.selectedChat)
-      this.lastSeen = this.selectedChat.sys_last_login;
+      // this.lastSeen = this.selectedChat.sys_last_login;
       console.log('this.lastSeen', this.lastSeen)
       this.messages = [];
       // Disconnect & Reconnect socket for the new chat
@@ -49,6 +49,7 @@ export class ChatWindowComponent {
       this.seenMessage();
       this.emitCheckMessages();
       this.setCounterZero();
+      this.getLastSeen();
       // this.checkMessageEvent();
       // this.emitCheckMessages();
       // this.getOnlineStatus();
@@ -75,6 +76,17 @@ export class ChatWindowComponent {
     this.getFavoriteMessage();
     // this.getOfflineMessages();
   }
+
+    // // get last seen
+    getLastSeen(){
+      const payload = {
+       user_id : this.selectedChat.people_id
+      }
+      this.chatService.getLastSeen(payload).subscribe((res:any)=>{
+        this.lastSeen = res.data.sys_last_login
+       console.log('res',res)
+      })
+     }
 
   ngAfterViewInit() {
     this.scrollToBottom();

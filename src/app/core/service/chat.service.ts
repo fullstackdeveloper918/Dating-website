@@ -252,4 +252,9 @@ export class ChatService {
   return this.socket.emit('favorite_message',{messageId : messageId, favorite_msg: favorite_message} )
   }
 
+  // get last seen
+  getLastSeen(userId:any){
+  return this._apiService.post(apiRoutes.getLastSeen,userId )
+  }
+
 }
