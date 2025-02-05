@@ -26,6 +26,7 @@ export class ChatWindowComponent {
   currentUserName:any
   isUserOnline!:boolean
   showScrollButton = false;
+  lastSeen : any
   constructor(
   private chatService: ChatService,
   private storageService : StorageService,
@@ -38,6 +39,9 @@ export class ChatWindowComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedChat'] && changes['selectedChat'].currentValue) {
       this.selectedChat = changes['selectedChat'].currentValue;
+      console.log('this.selectedChat', this.selectedChat)
+      this.lastSeen = this.selectedChat.sys_last_login;
+      console.log('this.lastSeen', this.lastSeen)
       this.messages = [];
       // Disconnect & Reconnect socket for the new chat
       this.reconnectSocket();
@@ -63,10 +67,12 @@ export class ChatWindowComponent {
     this.getConnection();
     this.getMessages();
     this.getOnlineUsers();
+    this.getOfflineUsers();
     // this.getUnseenMessages();
     this.receiveMessage();
     this.getDeleteMessages()
     this.getSenderMessage();
+    this.getFavoriteMessage();
     // this.getOfflineMessages();
   }
 
@@ -257,7 +263,12 @@ export class ChatWindowComponent {
         }
       });
       
+     
+    }
+
+    getOfflineUsers(){
       this.chatService.getOfflineUsers().subscribe((user) => {
+        console.log('offline users', user)
         if(user === this.selectedChat?.people_id){
           this.isUserOnline = false;
         }
@@ -373,7 +384,16 @@ export class ChatWindowComponent {
 
     // TOOGLE FAVORITE MESSAGE
     toggleFavorite(message: any) {
-      message.isFavorite = !message.isFavorite;
+      message.favorite_msg= !message.favorite_msg;
+      console.log('message.favoritemesage', message.favorite_msg)
+      this.chatService.emitFavoriteMessage(message.message_id, message.favorite_msg)
+    }
+
+    // GET FAVORITE MESSAGE
+    getFavoriteMessage(){
+      this.chatService.getFavoriteMessage().subscribe((favoriteMessage:any)=>{
+        console.log("favoritemessage", favoriteMessage)
+      })
     }
   
 }

@@ -19,6 +19,7 @@ export class ChatService {
   receiveMessage = new BehaviorSubject<any | null>(null);
   deleteMessage = new BehaviorSubject<any | null>(null);
   senderMessage = new BehaviorSubject<any | null>(null);
+  favoriteMessages = new BehaviorSubject<any | null>(null);
 
 
 
@@ -96,8 +97,17 @@ export class ChatService {
       this.senderMessage.next(senderMessge)
     })
 
+    this.socket.on('message_favorited', (favoriteMessage)=>{
+      this.favoriteMessages.next(favoriteMessage)
+    })
 
 
+
+  }
+
+  // GET FAVORITE MESSAGE
+  getFavoriteMessage(){
+    return this.favoriteMessages.asObservable();
   }
 
   // GET SENDER MESSAGE
@@ -234,4 +244,12 @@ export class ChatService {
   emitDeleteMessage(messageId:any){
     return this.socket.emit('delete_message', messageId)
   }
+
+  // EMIT FAVORITE MESSAGE
+  emitFavoriteMessage(messageId:any, favorite_message:any){
+  console.log('messageId', messageId);
+  console.log('favoritemessage', favorite_message)
+  return this.socket.emit('favorite_message',{messageId : messageId, favorite_msg: favorite_message} )
+  }
+
 }

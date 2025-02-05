@@ -45,6 +45,7 @@ export class ChatSidebarComponent {
     this.getOnlineUsers();
     this.receiveMessage();
     this.messageCountApi();
+    this.getOfflineUsers();
   }
 
 
@@ -139,6 +140,16 @@ export class ChatSidebarComponent {
         console.log('Updated unreadCounts:', this.unreadCounts);
       }
     });
+  }
+
+  // hitting the api 
+  getOfflineUsers(){
+    this._chatService.getOfflineUsers().subscribe((user) => {
+      console.log('offlineuser', user)
+      if(user){
+        this.getUsers();
+      }
+    }); 
   }
   
 }
