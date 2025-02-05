@@ -152,7 +152,7 @@ export class ChatSidebarComponent {
     this._chatService.getOfflineUsers().subscribe((user) => {
       console.log('offlineuser', user)
       if(user){
-          this.getUsers();
+          // this.getUsers();
       }
     }); 
   }
