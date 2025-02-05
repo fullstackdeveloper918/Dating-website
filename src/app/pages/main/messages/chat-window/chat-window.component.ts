@@ -396,6 +396,7 @@ export class ChatWindowComponent {
 
     // TOOGLE FAVORITE MESSAGE
     toggleFavorite(message: any) {
+      console.log('message', message)
       message.favorite_msg= !message.favorite_msg;
       console.log('message.favoritemesage', message.favorite_msg)
       this.chatService.emitFavoriteMessage(message.message_id, message.favorite_msg)

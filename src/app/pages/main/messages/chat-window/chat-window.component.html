@@ -38,10 +38,10 @@
             <button mat-menu-item>
                <!-- Favorite Button -->
             <button (click)="toggleFavorite(message)" class="favorite-btn">
-              <span *ngIf="message.isFavorite"><i class="fa-solid fa-star"></i></span>
-              <span *ngIf="!message.isFavorite"><i class="fa-regular fa-star"></i></span>
-              Favorite
-            </button>
+              <span *ngIf="message.favorite_msg"><i class="fa-solid fa-star"></i></span>
+              <span *ngIf="!message.favorite_msg"><i class="fa-regular fa-star"></i></span>
+              {{message.favorite_msg ? "Unfavorite" : "Favorite"}}
+            </button> 
             </button>
             <button mat-menu-item>
               <!-- Delete Button -->
