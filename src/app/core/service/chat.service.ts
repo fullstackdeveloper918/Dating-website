@@ -17,6 +17,9 @@ export class ChatService {
   private offlineUsers = new BehaviorSubject<any | null>(null); // Store offline user
   unSeenMessages = new BehaviorSubject<any | null>(null);
   receiveMessage = new BehaviorSubject<any | null>(null);
+  deleteMessage = new BehaviorSubject<any | null>(null);
+  senderMessage = new BehaviorSubject<any | null>(null);
+
 
 
   constructor(private _apiService : ApiService) {
@@ -72,21 +75,40 @@ export class ChatService {
       console.log('messageseen',data)
     })
 
-    this.socket.on('unseen_count',(data:any)=>{
-      console.log('data',data)
-    })
+    // this.socket.on('unseen_count',(data:any)=>{
+    //   console.log('data',data)
+    // })
     
-    this.socket.on('unseen_message_count', (data:any)=>{
-      console.log('unseen message count',data)
-    })
+    // this.socket.on('unseen_message_count', (data:any)=>{
+    //   console.log('unseen message count',data)
+    // })
 
     this.socket.on('receive_message', (data)=>{
       this.receiveMessage.next(data)
       // console.log('data', data);
     })
 
+    this.socket.on('message_deleted', (deleteMessage)=>{
+      this.deleteMessage.next(deleteMessage)
+    })
+
+    this.socket.on('sender_message', (senderMessge)=>{
+      this.senderMessage.next(senderMessge)
+    })
 
 
+
+  }
+
+  // GET SENDER MESSAGE
+  getSenderMessage(){
+    return this.senderMessage.asObservable();
+  }
+
+  // GET DELETE MESSAGES
+
+  getDeleteMessages(){
+    return this.deleteMessage.asObservable();
   }
 
   // GET UNSEEN MESSAGES
@@ -206,5 +228,10 @@ export class ChatService {
   // GET ONINE MESSAGES AND COUNTER
   getOfflineMessagesAndCounter(){
    return this._apiService.getAll(apiRoutes.unseenMessageCount)
+  }
+
+  // EMIT DELETE MESSAGE
+  emitDeleteMessage(messageId:any){
+    return this.socket.emit('delete_message', messageId)
   }
 }

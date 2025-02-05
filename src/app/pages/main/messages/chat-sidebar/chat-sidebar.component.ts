@@ -112,6 +112,7 @@ export class ChatSidebarComponent {
 
   // SHOW NOTIFICATION
   showNotification(senderName: string, messageText: string) {
+    console.log("senderName",senderName)
     this.toast.success(`${senderName}: ${messageText}`, 'New Message', {
       timeOut: 3000, // Adjust timeout as needed
       positionClass: 'toast-top-right',

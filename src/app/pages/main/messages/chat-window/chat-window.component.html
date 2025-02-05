@@ -22,10 +22,10 @@
 
     <!-- Messages -->
     <div class="flex-1 overflow-y-auto p-6 bg-gray-50 space-y-4" #messageList (scroll)="checkScroll()">
-      <div *ngFor="let message of messages">
+      <div *ngFor="let message of messages; let i = index">
         <!-- Show Date Header -->
-        <div *ngIf="message.dateHeader" class="date-header">{{ message.dateHeader }}</div>
-
+        <div *ngIf="message?.dateHeader" class="date-header">{{ message?.dateHeader }}</div>
+    
         <div [ngClass]="{
               'sent-message': message.sender_id === currentUser,
               'received-message': message.sender_id !== currentUser
@@ -33,12 +33,24 @@
           <div class="message-box">
             <div class="message-text">{{ message.message }}</div>
             <div class="message-timestamp">
-              {{ message.timestamp | timeAgo }} <!-- Formats the timestamp -->
+              {{ message.timestamp | timeAgo }} 
             </div>
+            
+            <!-- Favorite Button -->
+            <button (click)="toggleFavorite(message)" class="favorite-btn">
+              <span *ngIf="message.isFavorite">⭐</span>
+              <span *ngIf="!message.isFavorite">☆</span>
+            </button>
+    
+            <!-- Delete Button -->
+            <button *ngIf="message.sender_id === currentUser" (click)="deleteMessage(message, i)" class="delete-btn">
+              Delete
+            </button>
           </div>
         </div>
       </div>
     </div>
+      
 
     <!-- Scroll to Bottom Button -->
     <button *ngIf="showScrollButton" (click)="scrollToBottom()"

@@ -63,9 +63,10 @@ export class ChatWindowComponent {
     this.getConnection();
     this.getMessages();
     this.getOnlineUsers();
-    this.getUnseenMessages();
+    // this.getUnseenMessages();
     this.receiveMessage();
-
+    this.getDeleteMessages()
+    this.getSenderMessage();
     // this.getOfflineMessages();
   }
 
@@ -211,12 +212,12 @@ export class ChatWindowComponent {
 
     if (this.newMessage.trim()) {
       this.chatService.sendMessage(this.currentUser,this.selectedChat.people_id,this.newMessage);
-      this.messages.push({
-        sender_id: this.currentUser,
-        message : this.newMessage,
-        receiver_id : this.selectedChat.people_id,
-        timestamp : Date.now()
-      })
+      // this.messages.push({
+      //   sender_id: this.currentUser,
+      //   message : this.newMessage,
+      //   receiver_id : this.selectedChat.people_id,
+      //   timestamp : Date.now()
+      // })
       // this.messageHistory();  
       this.newMessage = '';
       setTimeout(() => {
@@ -332,5 +333,47 @@ export class ChatWindowComponent {
     setCounterZero(){
       
     }
- 
+
+    // DELETE MESSAGE
+    deleteMessage(message:any, index: number): void {
+      console.log('message', message)
+      this.chatService.emitDeleteMessage({messageId : message.message_id})
+      // Confirm deletion
+      // const confirmDelete = confirm('Are you sure you want to delete this message?');
+      // if (confirmDelete) {
+      //   // Remove message from the array
+      //   this.messages.splice(index, 1);
+      // }
+    }
+
+    // GET DELETE MESSAGES
+    getDeleteMessages(){
+      this.chatService.getDeleteMessages().subscribe((deleteMessages:any)=>{
+        console.log('detelemessage',deleteMessages)
+        const index = this.messages.findIndex(msg => msg.message_id === deleteMessages.messageId);
+        if (index !== -1) {
+          // Temporarily remove the message from the UI (optimistic UI update)
+          const deletedMessage = this.messages.splice(index, 1)[0];
+
+        }    
+        // console.log("dleltemessage", deleteMessages)
+      })
+    }
+
+
+    // GET SENDER MESSAGE
+    getSenderMessage(){
+      this.chatService.getSenderMessage().subscribe((senderMessage:any)=>{
+        console.log('senderMessage', senderMessage)
+        if(senderMessage){
+        this.messages.push(senderMessage);
+        }
+      })
+    }
+
+    // TOOGLE FAVORITE MESSAGE
+    toggleFavorite(message: any) {
+      message.isFavorite = !message.isFavorite;
+    }
+  
 }
