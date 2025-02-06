@@ -1,5 +1,5 @@
 <div style="height: 400px;">
-  <div id="chat_container" #chatContainer class="chat_container flex-1 flex flex-col bg-white relative" style="height: 86vh;">
+  <div id="chat_container"  class="chat_container flex-1 flex flex-col bg-white relative" style="height: 86vh;">
     <!-- Chat Header -->
     <div class="flex items-center bg-white px-2">
       <div class="p-4 bg-white flex items-center space-x-4 w-full">
@@ -10,7 +10,7 @@
           <div class="flex gap-3">
             <!-- <i class="fa fa-circle" [ngStyle]="{'color': isUserOnline ? 'green' : 'orange'}"></i> -->
             <p class="text-sm" [ngClass]="{'text-green-500': isUserOnline, 'text-gray-500': !isUserOnline}">
-              {{ isUserOnline ? "Online" : "Last seen: " + (lastSeen | date:'shortTime') }}
+              {{ isUserOnline ? "Online" : "Last seen: " + (lastSeen | timeAgo) }}
             </p>
              </div>
         </div>
@@ -20,40 +20,52 @@
       </button>
     </div>
     <!-- Messages -->
-    <div class="flex-1 overflow-y-auto p-6 bg-gray-50 space-y-4" #messageList (scroll)="checkScroll()">
+    <div #scroll  class="flex-1 overflow-y-auto p-6 bg-gray-50 space-y-4" (scroll)="checkScroll()">
       <div *ngFor="let message of messages; let i = index" class="w-full text-center">
         <!-- Show Date Header -->
-        <div *ngIf="message?.dateHeader" class="date-header inline-block mx-auto">{{ message?.dateHeader }}</div>
-        <div [ngClass]="{
-              'sent-message': message.sender_id === currentUser,
-              'received-message': message.sender_id !== currentUser
+        <div *ngIf="message?.dateHeader" class="date-header inline-block mx-auto">
+          {{ message?.dateHeader }}
+        </div>
+      
+        <!-- Ensure message exists before rendering -->
+        <div *ngIf="message" [ngClass]="{
+              'sent-message': message?.sender_id === currentUser,
+              'received-message': message?.sender_id !== currentUser
             }">
-          <div class="message-box" mat-button [matMenuTriggerFor]="menu">
-            <div class="message-text">{{ message.message }}</div>
+          <div class="message-box relative" mat-button [matMenuTriggerFor]="menu">
+            <div class="message-text">{{ message?.message }}</div>
+      
+            <!-- Star Icon Outside Menu -->
+            <button (click)="toggleFavorite(message)" class="absolute -top-2 -right-2 favorite-btn">
+              <i *ngIf="message?.favorite_msg" class="fa-solid fa-star text-yellow-500"></i>
+              <i *ngIf="!message?.favorite_msg" class="fa-regular fa-star text-gray-400 hover:text-yellow-500"></i>
+            </button>
+      
             <div class="message-timestamp">
-              {{ message.timestamp | timeAgo }}
+              {{ message?.timestamp | timeAgo }}
             </div>
-            <!-- <button >Menu</button> -->
+      
+            <!-- Menu -->
             <mat-menu #menu="matMenu">
-            <button mat-menu-item>
-               <!-- Favorite Button -->
-            <button (click)="toggleFavorite(message)" class="favorite-btn">
-              <span *ngIf="message.favorite_msg"><i class="fa-solid fa-star"></i></span>
-              <span *ngIf="!message.favorite_msg"><i class="fa-regular fa-star"></i></span>
-              {{message.favorite_msg ? "Unfavorite" : "Favorite"}}
-            </button> 
-            </button>
-            <button mat-menu-item>
-              <!-- Delete Button -->
-            <button *ngIf="message.sender_id === currentUser" (click)="deleteMessage(message, i)" class="delete-btn">
-              <i class="fa-solid fa-trash"></i>
-              Delete
-            </button>
-            </button>
+              <button mat-menu-item>
+                <button (click)="toggleFavorite(message)" class="favorite-btn">
+                  <span *ngIf="message?.favorite_msg"><i class="fa-solid fa-star"></i></span>
+                  <span *ngIf="!message?.favorite_msg"><i class="fa-regular fa-star"></i></span>
+                  {{ message?.favorite_msg ? "Unfavorite" : "Favorite" }}
+                </button>
+              </button>
+      
+              <button mat-menu-item *ngIf="message?.sender_id === currentUser">
+                <button (click)="deleteMessage(message, i)" class="delete-btn">
+                  <i class="fa-solid fa-trash"></i> Delete
+                </button>
+              </button>
             </mat-menu>
           </div>
         </div>
       </div>
+        
+      
     </div>
     <!-- Scroll to Bottom Button -->
     <button *ngIf="showScrollButton" (click)="scrollToBottom()"

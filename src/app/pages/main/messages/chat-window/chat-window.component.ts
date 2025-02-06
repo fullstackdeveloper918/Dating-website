@@ -14,7 +14,7 @@ import { format, isToday, isYesterday } from 'date-fns';
   styleUrls: ['./chat-window.component.scss']
 })
 export class ChatWindowComponent {
-  @ViewChild('chatContainer') chatContainer!: ElementRef;
+  @ViewChild('scroll', { static: false }) scroll!: ElementRef;
   @ViewChild('messageList') messageList!: ElementRef;
   @Input() selectedChat: any;   // user 2
   @Output() newMessages = new EventEmitter<any>();
@@ -39,24 +39,20 @@ export class ChatWindowComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedChat'] && changes['selectedChat'].currentValue) {
       this.selectedChat = changes['selectedChat'].currentValue;
-      console.log('this.selectedChat', this.selectedChat)
-      // this.lastSeen = this.selectedChat.sys_last_login;
-      console.log('this.lastSeen', this.lastSeen)
       this.messages = [];
-      // Disconnect & Reconnect socket for the new chat
+      this.newMessage = '';
       this.reconnectSocket();
       this.readMessages();
       this.seenMessage();
       this.emitCheckMessages();
       this.setCounterZero();
       this.getLastSeen();
-      // this.checkMessageEvent();
-      // this.emitCheckMessages();
-      // this.getOnlineStatus();
-      setTimeout(() => this.scrollToBottom(), 100);
-
+  
+      // Ensure messages load first before scrolling
+      setTimeout(() => this.scrollToBottom(), 300);
     }
   }
+  
   
 
   ngOnInit(): void {
@@ -64,7 +60,7 @@ export class ChatWindowComponent {
     this.messageHistory();
    }, 3000); 
     this.registerUser();
-    this.listenForMessages();
+    // this.listenForMessages();
     this.getConnection();
     this.getMessages();
     this.getOnlineUsers();
@@ -84,27 +80,30 @@ export class ChatWindowComponent {
       }
       this.chatService.getLastSeen(payload).subscribe((res:any)=>{
         this.lastSeen = res.data.sys_last_login
-       console.log('res',res)
+        console.log('this.lastSeen', this.lastSeen)
       })
      }
 
-  ngAfterViewInit() {
-    this.scrollToBottom();
-  }
+     ngAfterViewInit() {
+      setTimeout(() => this.scrollToBottom(), 300); // Delay allows messages to load first
+    }
 
   // ngOnChanges() {
   // }
 
   checkScroll() {
-    const container = this.messageList.nativeElement;
-    this.showScrollButton = container.scrollHeight - container.scrollTop > container.clientHeight + 100;
+
   }
 
   scrollToBottom() {
-    setTimeout(() => {
-      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
-      this.showScrollButton = false;
-    }, 100);
+    if (this.scroll) {
+      setTimeout(() => {
+        this.scroll.nativeElement.scrollTo({
+          top: this.scroll.nativeElement.scrollHeight,
+          behavior: 'smooth' // Enables smooth scrolling
+        });
+      }, 300); // Small delay ensures the DOM is updated
+    }
   }
 
   
@@ -126,7 +125,7 @@ export class ChatWindowComponent {
       setTimeout(() => {
         this.chatService.connect();
         this.chatService.registerUser(this.currentUser);
-        this.listenForMessages();
+        // this.listenForMessages();
         this.messageHistory();
       }, 500); 
     }
@@ -135,12 +134,11 @@ export class ChatWindowComponent {
     receiveMessage(){
       this.chatService.receiveMessages().subscribe((res:any)=>{
         // this.messages.push(res)
-        if(res.sender_id == this.selectedChat.people_id){
+        if(res?.sender_id == this.selectedChat?.people_id){
           this.messages.push(res)
         }
         this.newMessages.emit(res);
-        console.log('this.message', this.messages)
-        console.log('recievemessage', res)
+        this.scrollToBottom();
       })
     }
     
@@ -169,7 +167,6 @@ export class ChatWindowComponent {
         // Process messages to add date headers
         this.groupMessagesByDate();
   
-        console.log('this.messages', this.messages);
       }
     });
   }
@@ -199,11 +196,11 @@ export class ChatWindowComponent {
   }
   
   // LISTEN FOR MESSAGES
-  listenForMessages() {
-    this.chatService.listenForMessages().subscribe((message) => {
-      // this.messages.push(message);
-    });
-  }
+  // listenForMessages() {
+  //   this.chatService.listenForMessages().subscribe((message) => {
+  //     // this.messages.push(message);
+  //   });
+  // }
 
     // REGISTER USER
     registerUser(){
@@ -268,7 +265,7 @@ export class ChatWindowComponent {
     getOnlineUsers(){
       this.chatService.getOnlineUsers().subscribe((users:any) => {
         // this.onlineUsers.push(users);
-        if(users.users.includes(this.selectedChat?.people_id)){
+        if(users?.users?.includes(this.selectedChat?.people_id)){
           this.isUserOnline = true;
         } else {
           this.isUserOnline = false;
@@ -280,7 +277,6 @@ export class ChatWindowComponent {
 
     getOfflineUsers(){
       this.chatService.getOfflineUsers().subscribe((user) => {
-        console.log('offline users', user)
         if(user === this.selectedChat?.people_id){
           this.isUserOnline = false;
         }
@@ -310,7 +306,6 @@ export class ChatWindowComponent {
       // if (this.socket.connected) {
       //   this.socket.emit('send_file', fileData);
       // } else {
-      //   console.warn('WebSocket is not connected.');
       // }
     }
 
@@ -321,12 +316,10 @@ export class ChatWindowComponent {
     // } else{
     //   return "Offline";
     // }
-    // // console.log('this.selectChat', this.selectedChat)
     // }
 
     // READ MESSAGES WHEN CHAT
     readMessages(){
-      console.log(this.messages)
         // this.chatService.messageSeen()
     }
     messageId:any
@@ -334,7 +327,6 @@ export class ChatWindowComponent {
     getUnseenMessages(){
       this.chatService.getUnseenMessages().subscribe((res:any)=>{
         this.messageId = res;
-        console.log('messageId',res)
       })
     }
 
@@ -359,7 +351,6 @@ export class ChatWindowComponent {
 
     // DELETE MESSAGE
     deleteMessage(message:any, index: number): void {
-      console.log('message', message)
       this.chatService.emitDeleteMessage({messageId : message.message_id})
       // Confirm deletion
       // const confirmDelete = confirm('Are you sure you want to delete this message?');
@@ -372,8 +363,7 @@ export class ChatWindowComponent {
     // GET DELETE MESSAGES
     getDeleteMessages(){
       this.chatService.getDeleteMessages().subscribe((deleteMessages:any)=>{
-        console.log('detelemessage',deleteMessages)
-        const index = this.messages.findIndex(msg => msg.message_id === deleteMessages.messageId);
+        const index = this.messages.findIndex(msg => msg?.message_id === deleteMessages?.messageId);
         if (index !== -1) {
           // Temporarily remove the message from the UI (optimistic UI update)
           const deletedMessage = this.messages.splice(index, 1)[0];
@@ -387,7 +377,6 @@ export class ChatWindowComponent {
     // GET SENDER MESSAGE
     getSenderMessage(){
       this.chatService.getSenderMessage().subscribe((senderMessage:any)=>{
-        console.log('senderMessage', senderMessage)
         if(senderMessage){
         this.messages.push(senderMessage);
         }
@@ -396,16 +385,13 @@ export class ChatWindowComponent {
 
     // TOOGLE FAVORITE MESSAGE
     toggleFavorite(message: any) {
-      console.log('message', message)
       message.favorite_msg= !message.favorite_msg;
-      console.log('message.favoritemesage', message.favorite_msg)
       this.chatService.emitFavoriteMessage(message.message_id, message.favorite_msg)
     }
 
     // GET FAVORITE MESSAGE
     getFavoriteMessage(){
       this.chatService.getFavoriteMessage().subscribe((favoriteMessage:any)=>{
-        console.log("favoritemessage", favoriteMessage)
       })
     }
   

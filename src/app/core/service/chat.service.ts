@@ -45,24 +45,15 @@ export class ChatService {
       this.connectionStatus.next('Disconnected');
     });
 
-    // this.socket.on('message', (message: any) => {
-    //   console.log('New message received:', message);
-    //   this.messages.next([...this.messages.value, message]);
-    // });
-    this.socket.on('receive_message', (data) => {
-      console.log('data',data)
-      // this.messages.next([...this.messages.value, message]);
-    });
-    this.socket.on('user_typing', (data) => {
-      console.log(`User ${data.senderId} is typing...`);
-    });
-    this.socket.on('unseen_message_count', (data)=>{
-      console.log('unseen message count', data)
+    this.socket.on('receive_message', (data)=>{
+      this.receiveMessage.next(data)
+      // console.log('data', data);
     })
+
 
      // Listen for online users
      this.socket.on('update_user_count', (users: any[]) => {
-      console.log('online uers',users)
+      // console.log('online uers',users)
       this.onlineUsers.next(users); // Update observable
     });
 
@@ -84,10 +75,7 @@ export class ChatService {
     //   console.log('unseen message count',data)
     // })
 
-    this.socket.on('receive_message', (data)=>{
-      this.receiveMessage.next(data)
-      // console.log('data', data);
-    })
+ 
 
     this.socket.on('message_deleted', (deleteMessage)=>{
       this.deleteMessage.next(deleteMessage)
@@ -184,24 +172,21 @@ export class ChatService {
     }
   }
 
-  getUsers(){
-      return this._apiService.getAll(apiRoutes.userList)
+  getUsers(search?:any){
+      return this._apiService.getAll(apiRoutes.userList, search)
     }
 
-    listenForMessages(): Observable<string> {
-      return new Observable((observer) => {
-        this.socket.on('receive_message', (data) => {
-          console.log('data',data)
-          // console.log('this.messages',this.messages)
-          this.messages.next(data);
-          // console.log('this.messages', this.messages)
-        });
+    // listenForMessages(): Observable<string> {
+    //   return new Observable((observer) => {
+    //     this.socket.on('receive_message', (data) => {
+    //       this.messages.next(data);
+    //     });
   
-        return () => {
-          this.socket.off('message');
-        };
-      });
-    }
+    //     return () => { 
+    //       this.socket.off('message');
+    //     };
+    //   });
+    // }
 
     // GET CHAT HISTORY
   getMessageHistory(payload:any){
@@ -210,7 +195,6 @@ export class ChatService {
 
   // MARK AS SEEN
   viewMessage(senderId:any, recipientId:any){
-    console.log('senderId',senderId)
     setTimeout(()=>{
       this.socket.emit('mark_as_seen', {senderId, recipientId})
     }, 5000)
@@ -218,9 +202,7 @@ export class ChatService {
 
   // Emit seen message event
   seenMessage(messageId:any){
-    console.log('messageId1', messageId)
     setTimeout(()=>{
-      console.log('messageId2', messageId)
       this.socket.emit('message_seen',messageId)
     },2000)
     // this.getMessageHistory();
@@ -228,7 +210,6 @@ export class ChatService {
 
   // EMIT CHECK MESSAGE EVENT
   emitCheckMessageEvent(selectedChatId:any){
-   console.log('seletechat',selectedChatId.people_id)
    setTimeout(() => {  
     this.socket.emit('check_messages', selectedChatId.people_id)
    }, 2000);
@@ -247,8 +228,6 @@ export class ChatService {
 
   // EMIT FAVORITE MESSAGE
   emitFavoriteMessage(messageId:any, favorite_message:any){
-  console.log('messageId', messageId);
-  console.log('favoritemessage', favorite_message)
   return this.socket.emit('favorite_message',{messageId : messageId, favorite_msg: favorite_message} )
   }
 

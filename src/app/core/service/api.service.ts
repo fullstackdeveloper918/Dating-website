@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { apiUrl } from '../../../environment';  // Adjust the path for your environment config
 
 @Injectable({
@@ -14,14 +14,18 @@ export class ApiService {
   // GET method - Include params only if provided
   getAll<T>(endpoint: string, params?: HttpParams): Observable<any> {
     const url = `${this.baseUrl}/${endpoint}`;
-    const options: any = { observe: 'response' };  // Ensure full HttpResponse is returned
-
-    if (params) {
-      options.params = params;
-    }
-
-    return this.http.get<T>(url);
+    
+    const options: any = { observe: 'response', params }; // Correctly pass params
+  
+    return this.http.get<T>(url, options).pipe(
+      map((response:any) => response.body),  // Extract data
+      catchError(error => {
+        console.error('API Error:', error);
+        return throwError(() => error); // Handle errors properly
+      })
+    );
   }
+  
 
   // POST method - Include body only if provided
   post<T>(endpoint: string, body?: any): Observable<any> {

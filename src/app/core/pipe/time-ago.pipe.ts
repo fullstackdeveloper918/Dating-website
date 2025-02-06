@@ -2,27 +2,39 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'timeAgo',
-  pure: false, // Ensures it updates dynamically
+  pure: false, // Set to false to update dynamically if needed
 })
 export class TimeAgoPipe implements PipeTransform {
-  transform(value: any): string {
+  transform(value: string | Date): string {
     if (!value) return '';
 
-    const timestamp = new Date(value);
+    const date = new Date(value);
     const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - timestamp.getTime()) / 1000);
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    const diffInDays = Math.floor(diffInHours / 24);
+    const diffMs = now.getTime() - date.getTime();
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
 
-    if (diffInSeconds < 60) {
+    if (diffMinutes < 1) {
       return 'Just now';
-    } else if (diffInMinutes < 60) {
-      return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
-    } else if (diffInHours < 24) {
-      return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+    } else if (diffMinutes < 60) {
+      return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+    } else if (diffHours < 24) {
+      return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    } else if (diffDays === 1) {
+      return 'Yesterday';
+    } else if (diffDays === 2) {
+      return '2 days ago';
     } else {
-      return timestamp.toLocaleString(); // Show exact date/time after 24 hours
+      return date.toLocaleDateString(undefined, { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: true 
+      });
     }
   }
 }

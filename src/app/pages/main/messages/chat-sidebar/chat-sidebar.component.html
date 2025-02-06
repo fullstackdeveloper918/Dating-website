@@ -7,9 +7,9 @@
   <div class="p-md-4 p-2">
     <input
       type="text"
-      [(ngModel)]="searchTerm"
       placeholder="Search chats"
       class="w-full p-3 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
+      (input)="search($event)"
     />
   </div>
   <!-- Chat List -->
@@ -30,7 +30,7 @@
           </span>
         </h3>
         <i class="fa fa-circle"
-          [ngStyle]="{'color': onlineUsers.includes(chat.people_id) ? 'green' : 'orange'}">
+          [ngStyle]="{'color': onlineUsers?.includes(chat.people_id) ? 'green' : 'orange'}">
         </i>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { HttpParams } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ChatService } from 'src/app/core/service/chat.service';
@@ -9,7 +10,6 @@ import { ChatService } from 'src/app/core/service/chat.service';
 })
 export class ChatSidebarComponent {
   @Input() newMessage:any
-  searchTerm: string = '';
   selectedChat:any
   chatList : any[] = [
   ];
@@ -48,13 +48,6 @@ export class ChatSidebarComponent {
     this.getOfflineUsers();
   }
 
-
-
-
-  // increase count
-  increaseCount(chat:any){
-   console.log('chat',chat)
-  }
   
   selectChat(chat: any) {
     this.chatSelected.emit(chat);
@@ -71,20 +64,31 @@ export class ChatSidebarComponent {
   }
 
 
-  getUsers(){
-   this._chatService.getUsers().subscribe((user:any)=>{
-    this.chatList = user.data;
-    this.selectedChat = user.data[0]
-    this.chatSelected.emit(this.selectedChat);
-    // this.getLastSeen(this.selectedChat.people_id)
-   })
+  getUsers(search?: string) {
+    let params = new HttpParams();
+    
+    if (search) {
+      params = params.set('search', search); // Assuming API supports search param
+    }
+  
+    this._chatService.getUsers(params).subscribe((user: any) => {
+      if (!search) {
+        this.chatList = user?.data || [];
+        if (this.chatList.length > 0) {
+          this.selectedChat = this.chatList[0];
+          this.chatSelected.emit(this.selectedChat);
+        }
+      } else {
+        this.chatList = user.data || []
+        console.log('search user', user);
+      }
+    }, error => {
+      console.error("Error fetching users", error);
+    });
   }
+  
 
-  filteredChats() {
-    return this.chatList.filter(chat => 
-      chat.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-  }
+
 
   // GET ONLINE USERS
   getOnlineUsers(){
@@ -97,10 +101,9 @@ export class ChatSidebarComponent {
 
   receiveMessage(){
     this._chatService.receiveMessages().subscribe((res:any)=>{
+      console.log('receive message',res)
       // this.messages.push(res)
       this.latestMessage = res;
-      console.log('Updated latestMessage:', this.latestMessage);
-
       // Increase the count for the matching chat.people_id
       if (this.latestMessage?.sender_id && this.latestMessage.sender_id!=this.selectedChat.people_id) {
         const sender = this.chatList.find((user: any) => user.people_id === this.latestMessage.sender_id);
@@ -118,7 +121,6 @@ export class ChatSidebarComponent {
 
   // SHOW NOTIFICATION
   showNotification(senderName: string, messageText: string) {
-    console.log("senderName",senderName)
     this.toast.success(`${senderName}: ${messageText}`, 'New Message', {
       timeOut: 3000, // Adjust timeout as needed
       positionClass: 'toast-top-right',
@@ -127,13 +129,10 @@ export class ChatSidebarComponent {
 
   // MESSAGE COUNT API
   messageCountApi() {
-    this._chatService.getOfflineMessagesAndCounter().subscribe((res: any) => {
-      console.log('res', res);
-  
+    this._chatService.getOfflineMessagesAndCounter().subscribe((res: any) => {  
       if (res.status === 200 && Array.isArray(res.data)) {
         res.data.forEach((msg: any) => {
           if (msg.senderId && msg.count) {
-            console.log('Updating count for sender:', msg.senderId);
             let senderId = msg.senderId;
             let count = parseInt(msg.count, 10); // Convert count to a number
   
@@ -141,20 +140,22 @@ export class ChatSidebarComponent {
             this.unreadCounts[senderId] = (this.unreadCounts[senderId] || 0) + count;
           }
         });
-  
-        console.log('Updated unreadCounts:', this.unreadCounts);
-      }
+        }
     });
   }
 
   // hitting the api 
   getOfflineUsers(){
     this._chatService.getOfflineUsers().subscribe((user) => {
-      console.log('offlineuser', user)
       if(user){
           // this.getUsers();
       }
     }); 
+  }
+
+  // search users
+  search(event:any){
+    this.getUsers(event.target.value)
   }
   
 }

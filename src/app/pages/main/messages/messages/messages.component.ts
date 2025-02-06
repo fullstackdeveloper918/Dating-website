@@ -14,8 +14,8 @@ export class MessagesComponent {
   }
 
   handleNewMessage(message: any) {
-    console.log('New message received in parent:', message);
-    this.newMessage = message
+    // console.log('New message received in parent:', message);
+    // this.newMessage = message
   }
 
 
