@@ -221,8 +221,9 @@ export class ChatService {
 
   // EMIT CHECK MESSAGE EVENT
   emitCheckMessageEvent(selectedChatId:any){
+    console.log('selectedchatid', selectedChatId)
    setTimeout(() => {  
-    this.socket.emit('check_messages', selectedChatId.people_id)
+    this.socket.emit('check_messages', selectedChatId)
    }, 2000);
   }
 

@@ -160,9 +160,12 @@ export class ChatWindowComponent {
     // RECEIVE MESSAGES
     receiveMessage(){
       this.chatService.receiveMessages().subscribe((res:any)=>{
+        console.log('recievemesssge',res)
         // this.messages.push(res)
         if(res?.sender_id == this.selectedChat?.people_id){
           this.messages.push(res)
+          console.log('this is running')
+          this.chatService.emitCheckMessageEvent(this.selectedChat?.people_id);
         }
         this.newMessages.emit(res);
         this.scrollToBottom();
