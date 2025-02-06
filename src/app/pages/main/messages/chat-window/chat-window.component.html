@@ -34,13 +34,13 @@
         </div>
       
         <!-- Ensure message exists before rendering -->
-        <div *ngIf="message" [ngClass]="{
+        <div *ngIf="message && !message.is_message_archive" [ngClass]="{
               'sent-message': message?.sender_id === currentUser,
               'received-message': message?.sender_id !== currentUser
             }">
           <div class="message-box relative" mat-button [matMenuTriggerFor]="menu">
             <div class="message-text">{{ message?.message }}</div>
-      
+            
             <!-- Star Icon Outside Menu -->
             <button (click)="toggleFavorite(message)" class="absolute -top-2 -right-2 favorite-btn">
               <i *ngIf="message?.favorite_msg" class="fa-solid fa-star text-yellow-500"></i>

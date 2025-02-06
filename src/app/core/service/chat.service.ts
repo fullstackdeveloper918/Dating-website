@@ -269,8 +269,9 @@ export class ChatService {
     }
 
     // EMIT ARCHIEVE MESSAGE
-    emitArchieveMessage(messageId:any){
-      return this.socket.emit('archive_messages', messageId)
+    emitArchieveMessage(message:any){
+      console.log('messagid',message)
+      return this.socket.emit('archive_messages', {messageId: message.messageId, is_archive_message: true})
     }
 
 

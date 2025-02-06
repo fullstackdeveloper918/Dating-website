@@ -447,6 +447,7 @@ export class ChatWindowComponent {
     // archieve the messge
     archiveMessage(message: any, index: number) {
       // Remove the message from the active messages list
+      this.messages = this.messages.filter(msg => msg.message_id !== message.message_id);
     this.chatService.emitArchieveMessage({messageId : message.message_id})
 
     }
