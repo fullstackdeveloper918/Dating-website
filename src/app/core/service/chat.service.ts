@@ -276,5 +276,9 @@ export class ChatService {
     }
 
 
+    // GET ARCHIEVED MESSAGES
+    getArchivedMessages(data:any){
+      return this._apiService.post(apiRoutes.getArchievedMessages,data)
+    }
 
 }

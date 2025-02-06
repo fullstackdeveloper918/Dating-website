@@ -1,5 +1,5 @@
 <div style="height: 400px;">
-  <div id="chat_container"  class="chat_container flex-1 flex flex-col bg-white relative" style="height: 86vh;">
+  <div id="chat_container" class="chat_container flex-1 flex flex-col bg-white relative" style="height: 86vh;">
     <!-- Chat Header -->
     <div class="flex items-center bg-white px-2">
       <div class="p-4 bg-white flex items-center space-x-4 w-full">
@@ -9,8 +9,7 @@
         <div>
           <h3 class="text-lg font-semibold text-gray-800">{{ selectedChat?.username }}</h3>
           <div class="flex gap-3">
-            <p class="text-sm" 
-               [ngClass]="{'text-green-500': isUserOnline, 'text-gray-500': !isUserOnline}">
+            <p class="text-sm" [ngClass]="{'text-green-500': isUserOnline, 'text-gray-500': !isUserOnline}">
               <span *ngIf="isUserTyping" class="text-blue-500 animate-pulse">Typing...</span>
               <span *ngIf="!isUserTyping">
                 {{ isUserOnline ? "Online" : "Last seen: " + (lastSeen | timeAgo) }}
@@ -19,6 +18,7 @@
           </div>
         </div> 
       </div>
+      <button (click)="toggleArchivedMessages()"  class="p-2 bg-gray-500 md:text-sm text-xs text-white rounded-md hover:bg-gray-600 transition duration-200 mr-2 w-auto md:w-[120px]">  {{ showArchived ? "Hide Archived" : "View Archived" }}</button>
       <button (click)="logout()" 
               class="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200">
         Logout
@@ -26,81 +26,79 @@
     </div>
     
     <!-- Messages -->
-    <div #scroll  class="flex-1 overflow-y-auto p-6 bg-gray-50 space-y-4" (scroll)="checkScroll()">
-      <div *ngFor="let message of messages; let i = index" class="w-full text-center">
+    <div #scroll class="flex-1 overflow-y-auto p-6 bg-gray-50 space-y-4" (scroll)="checkScroll()">
+      <div *ngFor="let message of filteredMessages; let i = index" class="w-full text-center">
         <!-- Show Date Header -->
         <div *ngIf="message?.dateHeader" class="date-header inline-block mx-auto">
           {{ message?.dateHeader }}
         </div>
-      
-        <!-- Ensure message exists before rendering -->
-        <div *ngIf="message && !message.is_message_archive" [ngClass]="{
+        
+        <!-- Message Display -->
+        <div [ngClass]="{
               'sent-message': message?.sender_id === currentUser,
-              'received-message': message?.sender_id !== currentUser
+              'received-message': message?.sender_id !== currentUser,
+              'archived-message': message?.is_message_archive === 1
             }">
-          <div class="message-box relative" mat-button [matMenuTriggerFor]="menu">
-            <div class="message-text">{{ message?.message }}</div>
-            
-            <!-- Star Icon Outside Menu -->
-            <button (click)="toggleFavorite(message)" class="absolute -top-2 -right-2 favorite-btn">
-              <i *ngIf="message?.favorite_msg" class="fa-solid fa-star text-yellow-500"></i>
-              <i *ngIf="!message?.favorite_msg" class="fa-regular fa-star text-gray-400 hover:text-yellow-500"></i>
-            </button>
-      
-            <div class="message-timestamp">
-              {{ message?.timestamp | timeAgo }}
+            <div class="message-box relative" mat-button [matMenuTriggerFor]="menu">
+              <div class="message-text">{{ message?.message }}</div>
+              
+              <!-- Star Icon Outside Menu -->
+              <button class="absolute -top-2 -right-2 favorite-btn">
+                <i *ngIf="message?.favorite_msg" class="fa-solid fa-star text-yellow-500"></i>
+                <i *ngIf="!message?.favorite_msg" class="fa-regular fa-star text-gray-400 hover:text-yellow-500"></i>
+              </button>
+          
+              <div class="message-timestamp">
+                {{ message?.timestamp | timeAgo }}
+              </div>
+          
+              <!-- Menu -->
+              <mat-menu #menu="matMenu">
+                <!-- Favorite Button -->
+                <button mat-menu-item (click)="toggleFavorite(message)">
+                  <i *ngIf="message?.favorite_msg" class="fa-solid fa-star"></i>
+                  <i *ngIf="!message?.favorite_msg" class="fa-regular fa-star"></i>
+                  {{ message?.favorite_msg ? "Unfavorite" : "Favorite" }}
+                </button>
+                
+                <!-- Archive Button -->
+                <button mat-menu-item (click)="archiveMessage(message, i)">
+                  <i class="fa-solid fa-box-archive"></i> Archive
+                </button>
+                
+                <!-- Delete Button (Only for sender) -->
+                <button mat-menu-item *ngIf="message?.sender_id === currentUser" (click)="deleteMessage(message, i)">
+                  <i class="fa-solid fa-trash"></i> Delete
+                </button>
+              </mat-menu>
             </div>
-      
-            <!-- Menu -->
-            <mat-menu #menu="matMenu">
-              <!-- Favorite Button -->
-              <button mat-menu-item (click)="toggleFavorite(message)">
-                <i *ngIf="message?.favorite_msg" class="fa-solid fa-star"></i>
-                <i *ngIf="!message?.favorite_msg" class="fa-regular fa-star"></i>
-                {{ message?.favorite_msg ? "Unfavorite" : "Favorite" }}
-              </button>
-            
-              <!-- Archive Button -->
-              <button mat-menu-item (click)="archiveMessage(message, i)">
-                <i class="fa-solid fa-box-archive"></i> Archive
-              </button>
-            
-              <!-- Delete Button (Only for sender) -->
-              <button mat-menu-item *ngIf="message?.sender_id === currentUser" (click)="deleteMessage(message, i)">
-                <i class="fa-solid fa-trash"></i> Delete
-              </button>
-            </mat-menu>
-            
-          </div>
         </div>
       </div>
-        
-      
     </div>
+    
     <!-- Scroll to Bottom Button -->
     <button *ngIf="showScrollButton" (click)="scrollToBottom()"
-      class="p-2 bg-blue-500 text-white rounded-full fixed bottom-20 right-4 shadow-md hover:bg-blue-600 transition duration-200">
+            class="p-2 bg-blue-500 text-white rounded-full fixed bottom-20 right-4 shadow-md hover:bg-blue-600 transition duration-200">
       ↓
     </button>
   </div>
+  
   <!-- Message Input -->
   <div class="reply_container p-4 bg-white border-t flex items-center space-x-3">
-    <!-- File Input (Hidden) -->
     <input type="file" #fileInput (change)="handleFileUpload($event)" class="hidden"
-      accept="image/*, video/*, .pdf, .doc, .docx" />
-    <!-- Upload Button -->
-    <!-- <button (click)="fileInput.click()"
-      class="p-3 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400 shadow-md transition duration-200">
-      :paperclip:
-    </button> -->
-    <!-- Message Input -->
+           accept="image/*, video/*, .pdf, .doc, .docx" />
     <input type="text" [(ngModel)]="newMessage" placeholder="Type a message"
-  class="flex-1 p-3 border rounded-full shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
-  (keydown)="onUserTyping()" (keydown.enter)="sendMessage()" />
-    <!-- Send Button -->
+           class="flex-1 p-3 border rounded-full shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+           (keydown)="onUserTyping()" (keydown.enter)="sendMessage()" />
     <button (click)="sendMessage()"
-      class="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 shadow-md transition duration-200">
+            class="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 shadow-md transition duration-200">
       ➤
     </button>
   </div>
 </div>
+
+
+
+
+<!-- new -->
+

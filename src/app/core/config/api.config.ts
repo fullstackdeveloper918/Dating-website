@@ -25,7 +25,10 @@ export const apiRoutes = {
     unseenMessageCount: 'messages/unseen-message-count',
 
     // get last seen
-    getLastSeen : 'user/single-user'
+    getLastSeen : 'user/single-user',
+
+    // get archieved messages
+    getArchievedMessages: 'messages/archive-message'
 
     
 }

@@ -28,6 +28,8 @@ export class ChatWindowComponent {
   showScrollButton = false;
   lastSeen : any;
   isUserTyping: boolean = false;
+  showArchived = false;
+archivedMessages: any[] = [];
   private typingSubject = new Subject<void>();
   constructor(
   private chatService: ChatService,
@@ -445,7 +447,7 @@ export class ChatWindowComponent {
       })
     }
 
-    archivedMessages: any[] = []; 
+    // archivedMessages: any[] = []; 
 
     // archieve the messge
     archiveMessage(message: any, index: number) {
@@ -454,5 +456,23 @@ export class ChatWindowComponent {
     this.chatService.emitArchieveMessage({messageId : message.message_id})
 
     }
+
+    // SHOW ARCHIEVE MESSAGES
+    toggleArchivedMessages() {
+      this.showArchived = !this.showArchived;
+      this.messageHistory();
+    }
+    
+    
+    get filteredMessages(): any[] {
+      if (this.showArchived) {
+        // Return only archived messages (assuming archived messages have is_message_archive set to 1)
+        return this.messages.filter(message => message.is_message_archive === 1);
+      } else {
+        // Return only regular (non-archived) messages (assuming regular messages have is_message_archive set to 0 or falsy)
+        return this.messages.filter(message => message.is_message_archive !== 1);
+      }
+    }
+
   
 }

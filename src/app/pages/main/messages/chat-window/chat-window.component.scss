@@ -29,6 +29,11 @@
     max-width: 100%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
+  @media (max-width: 767px) {
+    .message-box {
+      padding: 4px 9px;
+    }
+  }
 }
 // .mat-mdc-menu-content{
 //   button{
@@ -69,4 +74,18 @@
 }
 .date-header-wrap{
   text-align: center;
+}
+@media (max-width: 767px ){
+  .profil-status{
+    margin-left: 3px !important;
+}
+.mat-mdc-menu-trigger {
+  padding: 4px 6px;
+}
+.message-text{
+  font-size: 14px;
+}
+message-text{
+  margin-top: 3px;
+}
 }
