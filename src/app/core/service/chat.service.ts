@@ -20,6 +20,9 @@ export class ChatService {
   deleteMessage = new BehaviorSubject<any | null>(null);
   senderMessage = new BehaviorSubject<any | null>(null);
   favoriteMessages = new BehaviorSubject<any | null>(null);
+  senderTypingId = new BehaviorSubject<any | null>(null);
+  senderTypingStoppedId = new BehaviorSubject<any | null>(null);
+
 
 
 
@@ -87,6 +90,14 @@ export class ChatService {
 
     this.socket.on('message_favorited', (favoriteMessage)=>{
       this.favoriteMessages.next(favoriteMessage)
+    })
+
+    this.socket.on('user_typing', (data)=>{
+      this.senderTypingId.next(data.senderId);
+    })
+
+    this.socket.on('user_stopped_typing', (data)=>{
+      this.senderTypingStoppedId.next(data.senderId)
     })
 
 
@@ -235,5 +246,33 @@ export class ChatService {
   getLastSeen(userId:any){
   return this._apiService.post(apiRoutes.getLastSeen,userId )
   }
+
+   // send user typing 
+   sendUserTypingEvent(senderId:any, receiverId:any){
+    this.socket.emit('user_typing', {senderId : senderId,  recipientId: receiverId})
+    }
+
+    // send stop user typing
+
+    sendUserStoppedTypingEvent(senderId:any, receiverId:any){
+      this.socket.emit('user_stopped_typing', {senderId : senderId,  recipientId: receiverId})
+    }
+
+    // GET USER TYPING
+    getUserTyping(){
+      return this.senderTypingId.asObservable();
+    }
+
+    // GET USER STOPPED TYPING
+    getUserStoppedTyping(){
+    return  this.senderTypingStoppedId.asObservable();
+    }
+
+    // EMIT ARCHIEVE MESSAGE
+    emitArchieveMessage(messageId:any){
+      return this.socket.emit('archive_messages', messageId)
+    }
+
+
 
 }

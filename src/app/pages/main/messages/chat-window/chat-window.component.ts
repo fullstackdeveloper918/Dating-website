@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { timestamp } from 'rxjs';
+import { debounceTime, Subject, timestamp } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { ChatService } from 'src/app/core/service/chat.service';
 import { StorageService } from 'src/app/core/service/storage/storage.service';
@@ -26,7 +26,9 @@ export class ChatWindowComponent {
   currentUserName:any
   isUserOnline!:boolean
   showScrollButton = false;
-  lastSeen : any
+  lastSeen : any;
+  isUserTyping: boolean = false;
+  private typingSubject = new Subject<void>();
   constructor(
   private chatService: ChatService,
   private storageService : StorageService,
@@ -71,7 +73,32 @@ export class ChatWindowComponent {
     this.getSenderMessage();
     this.getFavoriteMessage();
     // this.getOfflineMessages();
+    this.getUserTyping();
+    this.getUserStoppedTyping();
+    this.typingSubject.pipe(debounceTime(2000)).subscribe(() => {
+      this.emitUserStoppedTyping();
+    });
   }
+
+
+  // EMIT TYPING EVENT
+
+  onUserTyping() {
+    this.emitUserTyping();
+    
+    // Reset the debounce timer
+    this.typingSubject.next();
+  }
+
+  emitUserTyping() {
+    this.chatService.sendUserTypingEvent(this.currentUser, this.selectedChat.people_id);
+  }
+
+  emitUserStoppedTyping() {
+    this.chatService.sendUserStoppedTypingEvent(this.currentUser, this.selectedChat.people_id);
+  }
+
+
 
     // // get last seen
     getLastSeen(){
@@ -254,6 +281,7 @@ export class ChatWindowComponent {
 
   ngOnDestroy(): void {
     this.chatService.disconnect();
+    this.typingSubject.unsubscribe();
   }
   
   logout(){
@@ -393,6 +421,34 @@ export class ChatWindowComponent {
     getFavoriteMessage(){
       this.chatService.getFavoriteMessage().subscribe((favoriteMessage:any)=>{
       })
+    }
+
+    // GET USER TYPING
+    getUserTyping(){
+      this.chatService.getUserTyping().subscribe((usertypingSenderId:any)=>{
+        if(usertypingSenderId == this.selectedChat.people_id){
+          this.isUserTyping = true;
+          console.log('isusertyping', this.isUserTyping)
+        }
+      })
+    }
+
+    // GET USER STOP TYPING ID
+    getUserStoppedTyping(){
+      this.chatService.getUserStoppedTyping().subscribe((usertypingStoppedId:any)=>{
+        if(usertypingStoppedId == this.selectedChat.people_id){
+          this.isUserTyping = false;
+        }
+      })
+    }
+
+    archivedMessages: any[] = []; 
+
+    // archieve the messge
+    archiveMessage(message: any, index: number) {
+      // Remove the message from the active messages list
+    this.chatService.emitArchieveMessage({messageId : message.message_id})
+
     }
   
 }

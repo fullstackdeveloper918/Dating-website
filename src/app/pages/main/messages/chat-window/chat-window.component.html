@@ -3,22 +3,28 @@
     <!-- Chat Header -->
     <div class="flex items-center bg-white px-2">
       <div class="p-4 bg-white flex items-center space-x-4 w-full">
-        <img src="https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png" alt="Avatar"
-          class="w-12 h-12 rounded-full object-cover" />
+        <img src="https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png" 
+             alt="Avatar"
+             class="w-12 h-12 rounded-full object-cover" />
         <div>
           <h3 class="text-lg font-semibold text-gray-800">{{ selectedChat?.username }}</h3>
           <div class="flex gap-3">
-            <!-- <i class="fa fa-circle" [ngStyle]="{'color': isUserOnline ? 'green' : 'orange'}"></i> -->
-            <p class="text-sm" [ngClass]="{'text-green-500': isUserOnline, 'text-gray-500': !isUserOnline}">
-              {{ isUserOnline ? "Online" : "Last seen: " + (lastSeen | timeAgo) }}
+            <p class="text-sm" 
+               [ngClass]="{'text-green-500': isUserOnline, 'text-gray-500': !isUserOnline}">
+              <span *ngIf="isUserTyping" class="text-blue-500 animate-pulse">Typing...</span>
+              <span *ngIf="!isUserTyping">
+                {{ isUserOnline ? "Online" : "Last seen: " + (lastSeen | timeAgo) }}
+              </span>
             </p>
-             </div>
-        </div>
+          </div>
+        </div> 
       </div>
-      <button (click)="logout()" class="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200">
+      <button (click)="logout()" 
+              class="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200">
         Logout
       </button>
     </div>
+    
     <!-- Messages -->
     <div #scroll  class="flex-1 overflow-y-auto p-6 bg-gray-50 space-y-4" (scroll)="checkScroll()">
       <div *ngFor="let message of messages; let i = index" class="w-full text-center">
@@ -47,20 +53,24 @@
       
             <!-- Menu -->
             <mat-menu #menu="matMenu">
-              <button mat-menu-item>
-                <button (click)="toggleFavorite(message)" class="favorite-btn">
-                  <span *ngIf="message?.favorite_msg"><i class="fa-solid fa-star"></i></span>
-                  <span *ngIf="!message?.favorite_msg"><i class="fa-regular fa-star"></i></span>
-                  {{ message?.favorite_msg ? "Unfavorite" : "Favorite" }}
-                </button>
+              <!-- Favorite Button -->
+              <button mat-menu-item (click)="toggleFavorite(message)">
+                <i *ngIf="message?.favorite_msg" class="fa-solid fa-star"></i>
+                <i *ngIf="!message?.favorite_msg" class="fa-regular fa-star"></i>
+                {{ message?.favorite_msg ? "Unfavorite" : "Favorite" }}
               </button>
-      
-              <button mat-menu-item *ngIf="message?.sender_id === currentUser">
-                <button (click)="deleteMessage(message, i)" class="delete-btn">
-                  <i class="fa-solid fa-trash"></i> Delete
-                </button>
+            
+              <!-- Archive Button -->
+              <button mat-menu-item (click)="archiveMessage(message, i)">
+                <i class="fa-solid fa-box-archive"></i> Archive
+              </button>
+            
+              <!-- Delete Button (Only for sender) -->
+              <button mat-menu-item *ngIf="message?.sender_id === currentUser" (click)="deleteMessage(message, i)">
+                <i class="fa-solid fa-trash"></i> Delete
               </button>
             </mat-menu>
+            
           </div>
         </div>
       </div>
@@ -85,8 +95,8 @@
     </button> -->
     <!-- Message Input -->
     <input type="text" [(ngModel)]="newMessage" placeholder="Type a message"
-      class="flex-1 p-3 border rounded-full shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
-      (keydown.enter)="sendMessage()" />
+  class="flex-1 p-3 border rounded-full shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+  (keydown)="onUserTyping()" (keydown.enter)="sendMessage()" />
     <!-- Send Button -->
     <button (click)="sendMessage()"
       class="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 shadow-md transition duration-200">
