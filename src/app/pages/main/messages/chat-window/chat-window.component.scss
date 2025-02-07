@@ -89,3 +89,15 @@ message-text{
   margin-top: 3px;
 }
 }
+
+.archived-message{
+  .message-box{
+ background-color: #9333ea;
+  }
+  .message-text{
+    color: white;
+  }
+  .message-timestamp{
+    color: white;
+  }
+}

@@ -53,13 +53,11 @@ export class ChatService {
 
     this.socket.on('receive_message', (data)=>{
       this.receiveMessage.next(data)
-      // console.log('data', data);
     })
 
 
      // Listen for online users
      this.socket.on('update_user_count', (users: any[]) => {
-      // console.log('online uers',users)
       this.onlineUsers.next(users); // Update observable
     });
 
@@ -70,7 +68,6 @@ export class ChatService {
 
     this.socket.on('message_seen', (data:any)=>{
       this.unSeenMessages.next(data)
-      console.log('messageseen',data)
     })
 
     // this.socket.on('unseen_count',(data:any)=>{
@@ -225,8 +222,8 @@ export class ChatService {
 
   // EMIT CHECK MESSAGE EVENT
   emitCheckMessageEvent(selectedChatId:any){
-    console.log('selectedchatid', selectedChatId)
-   setTimeout(() => {  
+
+    setTimeout(() => {  
     this.socket.emit('check_messages', selectedChatId)
    }, 2000);
   }
@@ -275,7 +272,6 @@ export class ChatService {
 
     // EMIT ARCHIEVE MESSAGE
     emitArchieveMessage(message:any){
-      console.log('messagid',message)
       return this.socket.emit('archive_messages', {messageId: message.messageId, is_archive_message: true})
     }
 

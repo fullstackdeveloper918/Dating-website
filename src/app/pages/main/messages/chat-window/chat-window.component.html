@@ -39,9 +39,8 @@
               'received-message': message?.sender_id !== currentUser,
               'archived-message': message?.is_message_archive === 1
             }">
-            <div class="message-box relative" mat-button [matMenuTriggerFor]="menu">
-              <div class="message-text">{{ message?.message }}</div>
-              
+          <div class="message-box relative" mat-button [matMenuTriggerFor]="message?.is_message_archive === 1 ? null : menu">
+          <div class="message-text">{{ message?.message }}</div>
               <!-- Star Icon Outside Menu -->
               <button class="absolute -top-2 -right-2 favorite-btn">
                 <i *ngIf="message?.favorite_msg" class="fa-solid fa-star text-yellow-500"></i>

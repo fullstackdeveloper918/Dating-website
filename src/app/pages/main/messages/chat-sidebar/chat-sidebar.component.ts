@@ -27,7 +27,6 @@ export class ChatSidebarComponent {
   ngOnChanges(changes: SimpleChanges) {
     // if (changes['newMessage'] && changes['newMessage'].currentValue) {
     //   this.latestMessage = changes['newMessage'].currentValue;
-    //   console.log('Updated latestMessage:', this.latestMessage);
 
     //   // Increase the count for the matching chat.people_id
     //   if (this.latestMessage?.sender_id) {
@@ -80,7 +79,6 @@ export class ChatSidebarComponent {
         }
       } else {
         this.chatList = user.data || []
-        console.log('search user', user);
       }
     }, error => {
       console.error("Error fetching users", error);
@@ -101,7 +99,6 @@ export class ChatSidebarComponent {
 
   receiveMessage(){
     this._chatService.receiveMessages().subscribe((res:any)=>{
-      console.log('receive message',res)
       // this.messages.push(res)
       this.latestMessage = res;
       // Increase the count for the matching chat.people_id

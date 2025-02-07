@@ -54,7 +54,7 @@ archivedMessages: any[] = [];
       this.getLastSeen();
   
       // Ensure messages load first before scrolling
-      setTimeout(() => this.scrollToBottom(), 300);
+      setTimeout(() => this.scrollToBottom(), 1000);
     }
   }
   
@@ -110,7 +110,6 @@ archivedMessages: any[] = [];
       }
       this.chatService.getLastSeen(payload).subscribe((res:any)=>{
         this.lastSeen = res.data.sys_last_login
-        console.log('this.lastSeen', this.lastSeen)
       })
      }
 
@@ -163,11 +162,9 @@ archivedMessages: any[] = [];
     // RECEIVE MESSAGES
     receiveMessage(){
       this.chatService.receiveMessages().subscribe((res:any)=>{
-        console.log('recievemesssge',res)
         // this.messages.push(res)
         if(res?.sender_id == this.selectedChat?.people_id){
           this.messages.push(res)
-          console.log('this is running')
           this.chatService.emitCheckMessageEvent(this.selectedChat?.people_id);
         }
         this.newMessages.emit(res);
@@ -432,9 +429,8 @@ archivedMessages: any[] = [];
     // GET USER TYPING
     getUserTyping(){
       this.chatService.getUserTyping().subscribe((usertypingSenderId:any)=>{
-        if(usertypingSenderId == this.selectedChat.people_id){
+        if(usertypingSenderId == this.selectedChat?.people_id){
           this.isUserTyping = true;
-          console.log('isusertyping', this.isUserTyping)
         }
       })
     }
@@ -442,7 +438,7 @@ archivedMessages: any[] = [];
     // GET USER STOP TYPING ID
     getUserStoppedTyping(){
       this.chatService.getUserStoppedTyping().subscribe((usertypingStoppedId:any)=>{
-        if(usertypingStoppedId == this.selectedChat.people_id){
+        if(usertypingStoppedId == this.selectedChat?.people_id){
           this.isUserTyping = false;
         }
       })
@@ -462,6 +458,7 @@ archivedMessages: any[] = [];
     toggleArchivedMessages() {
       this.showArchived = !this.showArchived;
       this.messageHistory();
+      this.scrollToBottom();
     }
     
     
