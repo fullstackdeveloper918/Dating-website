@@ -4,6 +4,7 @@ import { Socket, io } from 'socket.io-client';
 import { apiUrl } from 'src/environment';
 import { ApiService } from './api.service';
 import { apiRoutes } from '../config/api.config';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,9 @@ export class ChatService {
 
 
 
-  constructor(private _apiService : ApiService) {
+  constructor(
+  private _apiService : ApiService,
+  private toast : ToastrService) {
     this.connect();
   }
 
@@ -160,6 +163,7 @@ export class ChatService {
     if (this.socket.connected) {
       this.socket.emit('private_message',{ senderId, recipientId, message });
     } else {
+      this.toast.error('WebSocket is not connected');
       console.warn('WebSocket is not connected.');
     }
     // this.listenForMessages();
