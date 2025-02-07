@@ -52,7 +52,7 @@ archivedMessages: any[] = [];
       this.emitCheckMessages();
       this.setCounterZero();
       this.getLastSeen();
-  
+      this.emitCheckMessageEvent();
       // Ensure messages load first before scrolling
       setTimeout(() => this.scrollToBottom(), 1000);
     }
@@ -81,6 +81,12 @@ archivedMessages: any[] = [];
     this.typingSubject.pipe(debounceTime(2000)).subscribe(() => {
       this.emitUserStoppedTyping();
     });
+  }
+
+
+  // EMIT CHECK MESSAGE EVENT
+  emitCheckMessageEvent(){
+    this.chatService.emitCheckMessageEvent(this.selectedChat?.people_id);
   }
 
 

@@ -38,6 +38,7 @@ export class ResetPasswordComponent {
      this._authService.resetPassword(this.resetForm.value).subscribe((res:any)=>{
       if(res.status == 200){
        this.toastr.success('Email send succesfully');
+       this.router.navigate(['/login'])
       }
      })
     }
