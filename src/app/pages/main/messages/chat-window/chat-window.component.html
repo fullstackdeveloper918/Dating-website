@@ -43,8 +43,8 @@
           <div class="message-text">{{ message?.message }}</div>
               <!-- Star Icon Outside Menu -->
               <button class="absolute -top-2 -right-2 favorite-btn">
-                <i *ngIf="message?.favorite_msg" class="fa-solid fa-star text-yellow-500"></i>
-                <i *ngIf="!message?.favorite_msg" class="fa-regular fa-star text-gray-400 hover:text-yellow-500"></i>
+                <i *ngIf="message?.favorite_msg && !this.showArchived" class="fa-solid fa-star text-yellow-500"></i>
+                <i *ngIf="!message?.favorite_msg && !this.showArchived" class="fa-regular fa-star text-gray-400 hover:text-yellow-500"></i>
               </button>
           
               <div class="message-timestamp">
