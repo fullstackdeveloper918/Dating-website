@@ -45,6 +45,7 @@ archivedMessages: any[] = [];
       this.selectedChat = changes['selectedChat'].currentValue;
       this.messages = [];
       this.newMessage = '';
+      this.isUserTyping = false;
       this.reconnectSocket();
       this.readMessages();
       this.seenMessage();
