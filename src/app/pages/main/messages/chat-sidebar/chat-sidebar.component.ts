@@ -2,6 +2,8 @@ import { HttpParams } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ChatService } from 'src/app/core/service/chat.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-chat-sidebar',
@@ -16,6 +18,8 @@ export class ChatSidebarComponent {
   onlineUsers:any
   latestMessage: any = null;
   unreadCounts: { [key: number]: number } = {};
+  private destroy$ = new Subject<void>();
+
 
   @Output() chatSelected = new EventEmitter<any>();
 
@@ -97,32 +101,33 @@ export class ChatSidebarComponent {
 
   // increase counter 
 
-  receiveMessage(){
-    this._chatService.receiveMessages().subscribe((res:any)=>{
-      // this.messages.push(res)
-      this.latestMessage = res;
-      // Increase the count for the matching chat.people_id
-      if (this.latestMessage?.sender_id && this.latestMessage.sender_id!=this.selectedChat.people_id) {
-        const sender = this.chatList.find((user: any) => user.people_id === this.latestMessage.sender_id);
-        const senderName = sender ? sender.username : 'Unknown';
-  
-        // Show toast notification with sender's name
-        this.showNotification(senderName, this.latestMessage.message);
-        if (!this.unreadCounts[this.latestMessage.sender_id]) {
-          this.unreadCounts[this.latestMessage.sender_id] = 0;
+  receiveMessage() {
+    this._chatService.receiveMessages()
+      .pipe(takeUntil(this.destroy$)) // Automatically unsubscribes when the component is destroyed
+      .subscribe((res: any) => {
+        this.latestMessage = res;
+        if (this.latestMessage?.sender_id && this.latestMessage.sender_id !== this.selectedChat.people_id) {
+          const sender = this.chatList.find((user: any) => user.people_id === this.latestMessage.sender_id);
+          const senderName = sender ? sender.username : 'Unknown';
+
+          this.showNotification(senderName, this.latestMessage.message);
+
+          if (!this.unreadCounts[this.latestMessage.sender_id]) {
+            this.unreadCounts[this.latestMessage.sender_id] = 0;
+          }
+          this.unreadCounts[this.latestMessage.sender_id]++;
         }
-        this.unreadCounts[this.latestMessage.sender_id]++; 
-      }
-    })
+      });
   }
 
-  // SHOW NOTIFICATION
-  showNotification(senderName: string, messageText: string) {
-    this.toast.success(`${senderName}: ${messageText}`, 'New Message', {
-      timeOut: 3000, // Adjust timeout as needed
-      positionClass: 'toast-top-right',
-    });
-  }
+
+    // SHOW NOTIFICATION
+    showNotification(senderName: string, messageText: string) {
+      this.toast.success(`${senderName}: ${messageText}`, 'New Message', {
+        timeOut: 3000, // Adjust timeout as needed
+        positionClass: 'toast-top-right',
+      });
+    }
 
   // MESSAGE COUNT API
   messageCountApi() {
