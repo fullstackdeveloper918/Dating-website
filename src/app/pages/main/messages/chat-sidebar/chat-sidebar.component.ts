@@ -123,7 +123,7 @@ export class ChatSidebarComponent {
 
     // SHOW NOTIFICATION
     showNotification(senderName: string, messageText: string) {
-      this.toast.success(`${senderName}: ${messageText}`, 'New Message', {
+      this.toast.info(`${senderName}: ${messageText}`, 'New Message', {
         timeOut: 3000, // Adjust timeout as needed
         positionClass: 'toast-top-right',
       });
