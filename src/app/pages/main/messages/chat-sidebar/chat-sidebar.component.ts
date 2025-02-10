@@ -112,6 +112,7 @@ export class ChatSidebarComponent {
     this._chatService.receiveMessages()
       .pipe(takeUntil(this.destroy$)) // Automatically unsubscribes when the component is destroyed
       .subscribe((res: any) => {
+        console.log('receive message', res)
         this.latestMessage = res;
         if (this.latestMessage?.sender_id && this.latestMessage.sender_id !== this.selectedChat.people_id) {
           const sender = this.chatList.find((user: any) => user.people_id === this.latestMessage.sender_id);

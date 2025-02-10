@@ -164,7 +164,7 @@ archivedMessages: any[] = [];
         this.chatService.registerUser(this.currentUser);
         // this.listenForMessages();
         this.messageHistory();
-      }, 500); 
+      }, 2000); 
     }
 
     // RECEIVE MESSAGES
