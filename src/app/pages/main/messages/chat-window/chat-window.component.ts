@@ -122,7 +122,7 @@ archivedMessages: any[] = [];
      }
 
      ngAfterViewInit() {
-      setTimeout(() => this.scrollToBottom(), 300); // Delay allows messages to load first
+      setTimeout(() => this.scrollToBottom(), 2000); // Delay allows messages to load first
     }
 
   // ngOnChanges() {
@@ -139,7 +139,7 @@ archivedMessages: any[] = [];
           top: this.scroll.nativeElement.scrollHeight,
           behavior: 'smooth' // Enables smooth scrolling
         });
-      }, 300); // Small delay ensures the DOM is updated
+      }, 2000); // Small delay ensures the DOM is updated
     }
   }
 
