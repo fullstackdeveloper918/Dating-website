@@ -7,6 +7,9 @@ import { MessagesComponent } from './messages/messages.component';
 import { FormsModule } from '@angular/forms';
 import { TimeAgoPipe } from 'src/app/core/pipe/time-ago.pipe';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatIconModule} from '@angular/material/icon';
+import {MatDividerModule} from '@angular/material/divider';
+
 @NgModule({
   declarations: [
     ChatSidebarComponent,
@@ -18,7 +21,9 @@ import {MatMenuModule} from '@angular/material/menu';
     CommonModule,
     MessagesRoutingModule,
     FormsModule,
-    MatMenuModule
+    MatMenuModule,
+    MatIconModule,
+    MatDividerModule
   ]
 })
 export class MessagesModule { }

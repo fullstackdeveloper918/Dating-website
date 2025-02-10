@@ -29,6 +29,7 @@ export class ChatWindowComponent {
   lastSeen : any;
   isUserTyping: boolean = false;
   showArchived = false;
+  currentUserFirstLetter: string
 archivedMessages: any[] = [];
   private typingSubject = new Subject<void>();
   constructor(
@@ -38,6 +39,7 @@ archivedMessages: any[] = [];
     const user :any = this.storageService.getItem("user");
     this.currentUser = user.data.people_id
     this.currentUserName = user.data.username
+    this.currentUserFirstLetter = user.data.username.charAt(0).toUpperCase();
   }
 
   ngOnChanges(changes: SimpleChanges) {

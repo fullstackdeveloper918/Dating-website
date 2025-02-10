@@ -19,10 +19,22 @@
         </div> 
       </div>
       <button (click)="toggleArchivedMessages()"  class="p-2 bg-gray-500 md:text-sm text-xs text-white rounded-md hover:bg-gray-600 transition duration-200 mr-2 w-auto md:w-[120px] whitespace-nowrap">  {{ showArchived ? "Hide Archived" : "View Archived" }}</button>
-      <button (click)="logout()" 
-              class="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200">
-        Logout
+      <button mat-button [matMenuTriggerFor]="menu" class="p-2 rounded-full bg-blue-500 text-white font-bold hover:bg-blue-600 transition duration-200 w-10 h-10 flex items-center justify-center">
+        {{ currentUserFirstLetter }}
       </button>
+      
+      <!-- Menu -->
+      <mat-menu #menu="matMenu" class="p-2">
+        <div mat-menu-item class="flex items-center space-x-2">
+          <mat-icon class="text-blue-500">person</mat-icon>
+          <span class="font-medium">{{ currentUserName }}</span>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()" class="text-red-600 flex items-center space-x-2">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
     </div>
     
     <!-- Messages -->
