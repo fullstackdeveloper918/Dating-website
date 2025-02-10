@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ChatService } from 'src/app/core/service/chat.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { StorageService } from 'src/app/core/service/storage/storage.service';
 
 @Component({
   selector: 'app-chat-sidebar',
@@ -19,13 +20,19 @@ export class ChatSidebarComponent {
   latestMessage: any = null;
   unreadCounts: { [key: number]: number } = {};
   private destroy$ = new Subject<void>();
-
-
+  currentUser:any
+  currentUserName:any
+  currentUserFirstLetter:any
   @Output() chatSelected = new EventEmitter<any>();
 
   constructor(
   private _chatService : ChatService,
-  private toast: ToastrService){
+  private toast: ToastrService,
+  private storageService : StorageService){
+    const user :any = this.storageService.getItem("user");
+    this.currentUser = user.data.people_id
+    this.currentUserName = user.data.username
+    this.currentUserFirstLetter = user.data.username.charAt(0).toUpperCase();
   }
 
   ngOnChanges(changes: SimpleChanges) {

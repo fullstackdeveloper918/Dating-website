@@ -1,7 +1,15 @@
 <div class="bg-gray-50 h-screen flex flex-col border-r">
   <!-- Header -->
-  <div class="p-4 bg-white shadow-md border-b">
+  <div class="p-4 bg-white shadow-md border-b flex items-center justify-between">
     <h2 class="lg:text-2xl text-lg font-bold text-gray-800">Chats</h2>
+    
+    <!-- Current User Section -->
+    <div class="flex items-center space-x-3">
+      <!-- <div class="w-10 h-10 bg-blue-500 text-white font-bold rounded-full flex items-center justify-center">
+        {{ currentUserFirstLetter }}
+      </div> -->
+      <span class="text-gray-700 font-bold">Current User : {{ currentUserName }}</span>
+    </div>
   </div>
   <!-- Search Bar -->
   <div class="p-md-4 p-2">
