@@ -4,7 +4,7 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10">
     <!-- Profile Card -->
      <div *ngFor="let user of userList">
-    <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center">
+    <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center" style="padding-block: 52px;">
       <img [src]="user?.profile_image || avatarUrl" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover">
       <h3 class="text-lg font-bold text-gray-800 mt-4">{{user?.username}}</h3>
       <p class="text-gray-600 text-sm">{{user?.email}}</p>
@@ -15,7 +15,7 @@
         View Profile
       </button>
       <button (click)="sendParticularUserMessage(user)"
-      class="mt-4 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600"
+      class="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-800"
     >
       Send Message
     </button>
