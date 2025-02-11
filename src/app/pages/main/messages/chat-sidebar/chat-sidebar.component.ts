@@ -5,6 +5,7 @@ import { ChatService } from 'src/app/core/service/chat.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { StorageService } from 'src/app/core/service/storage/storage.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-chat-sidebar',
@@ -23,16 +24,24 @@ export class ChatSidebarComponent {
   currentUser:any
   currentUserName:any
   currentUserFirstLetter:any
+  userId:any
   @Output() chatSelected = new EventEmitter<any>();
 
   constructor(
   private _chatService : ChatService,
   private toast: ToastrService,
-  private storageService : StorageService){
+  private storageService : StorageService,
+  private route : ActivatedRoute){
     const user :any = this.storageService.getItem("user");
     this.currentUser = user.data.people_id
     this.currentUserName = user.data.username
     this.currentUserFirstLetter = user.data.username.charAt(0).toUpperCase();
+
+    this.route.queryParams.subscribe(params => {
+      const userId = params['id'];
+      this.userId = userId
+      console.log('Chatting with user ID:', userId);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -85,8 +94,16 @@ export class ChatSidebarComponent {
       if (!search) {
         this.chatList = user?.data || [];
         if (this.chatList.length > 0) {
+          if(!this.userId){
           this.selectedChat = this.chatList[0];
+          console.log('this.selectedChat', this.selectedChat)
           this.chatSelected.emit(this.selectedChat);
+          }else{
+            // this.selectedChat = this.userId;
+            this.selectedChat = this.chatList.find(userList => this.userId == userList.people_id);
+            console.log()
+            this.chatSelected.emit(this.selectedChat)
+          }
         }
       } else {
         this.chatList = user.data || []

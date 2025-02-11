@@ -28,7 +28,10 @@ export const apiRoutes = {
     getLastSeen : 'user/single-user',
 
     // get archieved messages
-    getArchievedMessages: 'messages/archive-message'
+    getArchievedMessages: 'messages/archive-message',
+
+    // GET SINGLE USER INFO
+    getSingleUserInfo : 'user/single-user'
 
     
 }

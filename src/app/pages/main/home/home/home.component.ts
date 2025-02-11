@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { ApiService } from '../../../../core/service/api.service';
 import { HomeService } from 'src/app/core/service/home.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,8 @@ export class HomeComponent {
   avatarUrl: string = "https://media.istockphoto.com/id/500954812/vector/male-avatar-profile-picture-vector-illustations.jpg?s=612x612&w=is&k=20&c=E5qY1LN6KkouiRaiqRyL5GyvwUOvNRaAnJGna2FtVDo="
   constructor(
   private homeService : HomeService,
-  private toastr : ToastrService){}
+  private toastr : ToastrService,
+  private router : Router){}
 
   ngOnInit(){
     this.getUsers()
@@ -28,7 +30,13 @@ export class HomeComponent {
         this.userList = response.data;
       } 
     } catch (error) {
-      this.toastr.error('Error fetching users');
+      // this.toastr.error('Error fetching users');
     }
+  }
+
+  // GO TO USER PROFILE
+  goToUserProfile(user:any){
+    console.log('user',user)
+    this.router.navigate([`main/profile/view-profile/${user.people_id}`])
   }
 }

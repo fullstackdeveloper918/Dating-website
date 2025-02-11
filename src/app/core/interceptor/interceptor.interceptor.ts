@@ -5,13 +5,15 @@ import { catchError, finalize } from 'rxjs/operators';
 import { LoaderService } from '../service/loader/loader.service';
 import { StorageService } from '../service/storage/storage.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class InterceptorInterceptor implements HttpInterceptor {
   constructor(
     private loaderService: LoaderService,
     private storageService: StorageService,
-    private router: Router  // Inject Router to check URL
+    private router: Router,  // Inject Router to check URL,
+    private toastr : ToastrService
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
@@ -46,6 +48,11 @@ export class InterceptorInterceptor implements HttpInterceptor {
         }
       }),
       catchError((error: HttpErrorResponse) => {
+        if(!error.ok){
+          this.storageService.removeItem('user')
+          this.router.navigate(['login'])
+          this.toastr.error('Token has expired');
+        }
         if (shouldShowLoader) {
           this.loaderService.hide();
         }

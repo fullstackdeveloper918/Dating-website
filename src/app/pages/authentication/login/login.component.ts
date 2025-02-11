@@ -51,7 +51,7 @@ export class LoginComponent {
         if(response.status == 200){
           this.tostr.success('Login Successfully')
           this._storageService.setItem('user',response)
-          this.router.navigate(['/chat']);
+          this.router.navigate(['/main']);
         }
       } catch (error:any) {
         if(error.status == 400){

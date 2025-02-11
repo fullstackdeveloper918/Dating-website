@@ -9,7 +9,7 @@ const routes: Routes = [
     component : ProfileComponent
   },
   {
-    path : 'view-profile',
+    path : 'view-profile/:id',
     component : ViewProfileComponent
   }
 ];
