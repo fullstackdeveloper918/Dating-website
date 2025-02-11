@@ -5,7 +5,7 @@ import { ChatService } from 'src/app/core/service/chat.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { StorageService } from 'src/app/core/service/storage/storage.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat-sidebar',
@@ -31,7 +31,8 @@ export class ChatSidebarComponent {
   private _chatService : ChatService,
   private toast: ToastrService,
   private storageService : StorageService,
-  private route : ActivatedRoute){
+  private route : ActivatedRoute,
+  private router: Router){
     const user :any = this.storageService.getItem("user");
     this.currentUser = user.data.people_id
     this.currentUserName = user.data.username
@@ -39,8 +40,17 @@ export class ChatSidebarComponent {
 
     this.route.queryParams.subscribe(params => {
       const userId = params['id'];
-      this.userId = userId
-      console.log('Chatting with user ID:', userId);
+      if (userId) {
+        this.userId = userId;
+        console.log('Chatting with user ID:', userId);
+        
+        // Clear query params after processing them
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: {},
+          replaceUrl: true  
+        });
+      }
     });
   }
 
