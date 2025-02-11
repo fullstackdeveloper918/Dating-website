@@ -38,7 +38,7 @@ export class LoginComponent {
   checkUser(){
    const user = this.storageService.getItem("user")
    if(user){
-    this.router.navigate(['/chat'])
+    this.router.navigate(['/main'])
    }
   }
   
