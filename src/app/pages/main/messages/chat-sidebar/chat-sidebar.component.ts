@@ -143,6 +143,7 @@ export class ChatSidebarComponent {
         this.latestMessage = res;
         if (this.latestMessage?.sender_id && this.latestMessage.sender_id !== this.selectedChat.people_id) {
           const sender = this.chatList.find((user: any) => user.people_id === this.latestMessage.sender_id);
+          if(!sender) return;
           const senderName = sender ? sender.username : 'Unknown';
 
           this.showNotification(senderName, this.latestMessage.message);
