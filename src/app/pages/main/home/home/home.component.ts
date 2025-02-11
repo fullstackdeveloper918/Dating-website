@@ -36,7 +36,17 @@ export class HomeComponent {
 
   // GO TO USER PROFILE
   goToUserProfile(user:any){
-    console.log('user',user)
     this.router.navigate([`main/profile/view-profile/${user.people_id}`])
   }
+
+  // SEND PARTICULAT USER MESSAGE
+sendParticularUserMessage(user:any) {
+  const userId = user?.people_id;  // Ensure you have the user ID
+  if (userId) {
+    this.router.navigate(['chat'], { queryParams: { id: userId } });  // Add userId as query param
+  } else {
+    this.toastr.error("User Id not found")
+    console.error('User ID not found!');
+  }
+}
 }
