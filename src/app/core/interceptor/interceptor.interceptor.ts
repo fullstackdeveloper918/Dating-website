@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class InterceptorInterceptor implements HttpInterceptor {
+  private isToastShown = false;  
   constructor(
     private loaderService: LoaderService,
     private storageService: StorageService,
@@ -48,10 +49,13 @@ export class InterceptorInterceptor implements HttpInterceptor {
         }
       }),
       catchError((error: HttpErrorResponse) => {
-        if(!error.ok){
-          this.storageService.removeItem('user')
-          this.router.navigate(['login'])
+        if (!error.ok && !this.isToastShown) {
+          this.isToastShown = true; 
+          this.storageService.removeItem('user');
+          this.router.navigate(['login']);
           this.toastr.error('Token has expired');
+          this.isToastShown = false
+          // setTimeout(() => this.isToastShown = false, 500);
         }
         if (shouldShowLoader) {
           this.loaderService.hide();
