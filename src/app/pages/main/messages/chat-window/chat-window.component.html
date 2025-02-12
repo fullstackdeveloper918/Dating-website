@@ -95,10 +95,15 @@
   </div>
 
   <ng-template #messageTemplate>
-    <div class="flex items-center justify-center h-full">
-      <p class="text-center text-gray-500 text-lg">Select a chat to start messaging.</p>
+    <div class="flex flex-col items-center justify-center h-full space-y-6">
+      <button (click)="goToHomePage()"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105">
+        🚀 Explore Profiles
+      </button>
+      <p class="text-center text-gray-500 text-xl font-medium">Select a chat to start messaging.</p>
     </div>
   </ng-template>
+  
   
   <!-- Message Input -->
   <div class="reply_container p-4 bg-white border-t flex items-center space-x-3" *ngIf="selectedChat">

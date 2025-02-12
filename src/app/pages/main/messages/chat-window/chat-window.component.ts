@@ -6,6 +6,7 @@ import { ChatService } from 'src/app/core/service/chat.service';
 import { StorageService } from 'src/app/core/service/storage/storage.service';
 import { apiUrl } from 'src/environment';
 import { format, isToday, isYesterday } from 'date-fns';
+import { HttpParams } from '@angular/common/http';
 
 
 @Component({
@@ -30,12 +31,14 @@ export class ChatWindowComponent {
   isUserTyping: boolean = false;
   showArchived = false;
   currentUserFirstLetter: string
-archivedMessages: any[] = [];
+  archivedMessages: any[] = [];
+  allChatFalse:any
   private typingSubject = new Subject<void>();
   constructor(
   private chatService: ChatService,
   private storageService : StorageService,
-  private router : Router) {
+  private router : Router,
+  private _chatService : ChatService) {
     const user :any = this.storageService.getItem("user");
     this.currentUser = user.data.people_id
     this.currentUserName = user.data.username
@@ -65,6 +68,7 @@ archivedMessages: any[] = [];
   
 
   ngOnInit(): void {
+    this.getUsers();
     console.log('this.selectedchat', this.selectedChat)
    setTimeout(() => {
     this.messageHistory();
@@ -89,6 +93,19 @@ archivedMessages: any[] = [];
   }
 
 
+  // GET USERS
+  getUsers(search?: string) {
+    let params = new HttpParams();
+  
+    if (search) {
+      params = params.set('search', search); // Assuming API supports search param
+    }
+  
+    this._chatService.getUsers(params).subscribe((user: any) => {
+      this.allChatFalse = user.data.every((chat:any) => chat.has_chat === 0);
+    });
+  }
+  
   // EMIT CHECK MESSAGE EVENT
   emitCheckMessageEvent(){
     this.chatService.emitCheckMessageEvent(this.selectedChat?.people_id);
@@ -483,5 +500,10 @@ archivedMessages: any[] = [];
       }
     }
 
+    // GO TO HOME PAGE
+goToHomePage(){
+  this.router.navigate(['/main/home'])
+}
+  
   
 }

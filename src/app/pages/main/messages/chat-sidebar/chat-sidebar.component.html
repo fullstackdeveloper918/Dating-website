@@ -22,11 +22,11 @@
   </div>
   <!-- Chat List -->
   <div class="flex-1 overflow-y-scroll space-y-1 p-2">
-    <div *ngIf="allChatFalse" class="flex justify-center items-center h-full">
-      <button (click)="goToHomePage()" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 ease-in-out">
-        🚀 Explore Profiles
-      </button>
+    <div *ngIf="allChatFalse" class="flex flex-col items-center justify-center h-full space-y-4">
+      <i class="fa-solid fa-comment-slash text-gray-400 text-6xl"></i>
+      <p class="text-gray-500 text-xl font-medium">No users in chat</p>
     </div>
+    
     <div *ngFor="let chat of filteredChatList"
       (click)="selectChat(chat)"
       class="flex items-center md:p-3 p-1.5 rounded-lg cursor-pointer transition duration-200"
