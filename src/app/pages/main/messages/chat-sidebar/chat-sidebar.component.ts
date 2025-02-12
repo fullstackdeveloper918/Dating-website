@@ -107,12 +107,10 @@ export class ChatSidebarComponent {
           if(!this.userId){
             this.allChatFalse = this.chatList.every(chat => chat.has_chat === 0);
           // this.selectedChat = this.chatList[0];
-          // console.log('this.selectedChat', this.selectedChat)
           // this.chatSelected.emit(this.selectedChat);
           }else{
             // this.selectedChat = this.userId;
             this.selectedChat = this.chatList.find(userList => this.userId == userList.people_id);
-            console.log()
             this.chatSelected.emit(this.selectedChat)
           }
         }
@@ -136,19 +134,18 @@ export class ChatSidebarComponent {
 
   // increase counter 
 
-  receiveMessage() {
-    this._chatService.receiveMessages()
-      .pipe(takeUntil(this.destroy$)) // Automatically unsubscribes when the component is destroyed
-      .subscribe((res: any) => {
-        console.log('receive message', res)
-        this.chatList.map(chat => {
-          if (chat.people_id == res.sender_id) {
-            chat.has_chat = 1;
-          }
-        })
-        console.log('this.chatList', this.chatList)
+    receiveMessage() {
+      this._chatService.receiveMessages()
+        .pipe(takeUntil(this.destroy$)) // Automatically unsubscribes when the component is destroyed
+        .subscribe((res: any) => {
+          this.chatList.forEach(chat => {
+            if (chat.people_id === res.sender_id) {
+              chat.has_chat = 1;
+            }
+          });
+          this.chatList = this.chatList;       
         this.latestMessage = res;
-        if (this.latestMessage?.sender_id && this.latestMessage.sender_id !== this.selectedChat.people_id) {
+        if (this.latestMessage?.sender_id && this.latestMessage.sender_id !== this.selectedChat?.people_id) {
           const sender = this.chatList.find((user: any) => user.people_id === this.latestMessage.sender_id);
           if(!sender) return;
           const senderName = sender ? sender.username : 'Unknown';
@@ -212,7 +209,6 @@ get filteredChatList() {
     const newArray =  this.chatList
       .map(chat => {
         if (chat.people_id == this.userId) {
-          console.log('chat', chat)
           chat.has_chat = 1;
         }
         return chat;
