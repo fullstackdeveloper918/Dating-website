@@ -138,12 +138,14 @@ export class ChatSidebarComponent {
       this._chatService.receiveMessages()
         .pipe(takeUntil(this.destroy$)) // Automatically unsubscribes when the component is destroyed
         .subscribe((res: any) => {
+          console.log('recive message', res)
           this.chatList.forEach(chat => {
             if (chat.people_id === res.sender_id) {
               chat.has_chat = 1;
             }
           });
           this.chatList = this.chatList;       
+          console.log('this.chatlist', this.chatList)
         this.latestMessage = res;
         if (this.latestMessage?.sender_id && this.latestMessage.sender_id !== this.selectedChat?.people_id) {
           const sender = this.chatList.find((user: any) => user.people_id === this.latestMessage.sender_id);

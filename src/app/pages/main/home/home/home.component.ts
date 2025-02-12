@@ -36,7 +36,6 @@ export class HomeComponent {
     try {
       const response = await this.homeService.getUsers().toPromise();
       if (response.status == 200) {
-        console.log('response',response.data[0])
         this.userList = response.data;
       } 
     } catch (error) {
