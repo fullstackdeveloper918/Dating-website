@@ -44,7 +44,9 @@ archivedMessages: any[] = [];
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedChat'] && changes['selectedChat'].currentValue) {
+      console.log('changes', changes)
       this.selectedChat = changes['selectedChat'].currentValue;
+      console.log('selectedChat', this.selectedChat)
       this.messages = [];
       this.newMessage = '';
       this.isUserTyping = false;
@@ -63,6 +65,7 @@ archivedMessages: any[] = [];
   
 
   ngOnInit(): void {
+    console.log('this.selectedchat', this.selectedChat)
    setTimeout(() => {
     this.messageHistory();
    }, 3000); 

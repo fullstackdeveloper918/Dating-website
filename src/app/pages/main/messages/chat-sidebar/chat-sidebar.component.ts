@@ -25,6 +25,7 @@ export class ChatSidebarComponent {
   currentUserName:any
   currentUserFirstLetter:any
   userId:any
+  allChatFalse:any
   @Output() chatSelected = new EventEmitter<any>();
 
   constructor(
@@ -92,7 +93,6 @@ export class ChatSidebarComponent {
     }
   }
 
-
   getUsers(search?: string) {
     let params = new HttpParams();
     
@@ -105,9 +105,10 @@ export class ChatSidebarComponent {
         this.chatList = user?.data || [];
         if (this.chatList.length > 0) {
           if(!this.userId){
-          this.selectedChat = this.chatList[0];
-          console.log('this.selectedChat', this.selectedChat)
-          this.chatSelected.emit(this.selectedChat);
+            this.allChatFalse = this.chatList.every(chat => chat.has_chat === 0);
+          // this.selectedChat = this.chatList[0];
+          // console.log('this.selectedChat', this.selectedChat)
+          // this.chatSelected.emit(this.selectedChat);
           }else{
             // this.selectedChat = this.userId;
             this.selectedChat = this.chatList.find(userList => this.userId == userList.people_id);
@@ -140,6 +141,12 @@ export class ChatSidebarComponent {
       .pipe(takeUntil(this.destroy$)) // Automatically unsubscribes when the component is destroyed
       .subscribe((res: any) => {
         console.log('receive message', res)
+        this.chatList.map(chat => {
+          if (chat.people_id == res.sender_id) {
+            chat.has_chat = 1;
+          }
+        })
+        console.log('this.chatList', this.chatList)
         this.latestMessage = res;
         if (this.latestMessage?.sender_id && this.latestMessage.sender_id !== this.selectedChat.people_id) {
           const sender = this.chatList.find((user: any) => user.people_id === this.latestMessage.sender_id);
@@ -214,7 +221,10 @@ get filteredChatList() {
   }
 }
 
-
+// GO TO HOME PAGE
+goToHomePage(){
+  this.router.navigate(['/main/home'])
+}
   
 }
 
