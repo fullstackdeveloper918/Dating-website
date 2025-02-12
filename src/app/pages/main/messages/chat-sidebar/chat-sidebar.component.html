@@ -22,7 +22,7 @@
   </div>
   <!-- Chat List -->
   <div class="flex-1 overflow-y-scroll space-y-1 p-2">
-    <div *ngFor="let chat of chatList"
+    <div *ngFor="let chat of filteredChatList"
       (click)="selectChat(chat)"
       class="flex items-center md:p-3 p-1.5 rounded-lg cursor-pointer transition duration-200"
       [ngClass]="{'bg-blue-100': selectedChat === chat, 'hover:bg-gray-200': selectedChat !== chat}">

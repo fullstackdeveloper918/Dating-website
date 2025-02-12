@@ -195,5 +195,27 @@ export class ChatSidebarComponent {
   search(event:any){
     this.getUsers(event.target.value)
   }
+
+  // getter function for chatList
+
+get filteredChatList() {
+  if (!this.userId) {
+    return this.chatList.filter(chat => chat.has_chat === 1);
+  } else {
+    const newArray =  this.chatList
+      .map(chat => {
+        if (chat.people_id == this.userId) {
+          console.log('chat', chat)
+          chat.has_chat = 1;
+        }
+        return chat;
+      })
+      return newArray.filter((chat:any) => chat.has_chat === 1);
+  }
+}
+
+
   
 }
+
+

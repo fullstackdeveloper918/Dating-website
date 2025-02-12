@@ -11,6 +11,7 @@ export const apiRoutes = {
 
     // user 
     userList : 'user/list',
+    userAllList: 'user/list-all',
     getUser : 'user/edit-user',
     updateUserProfile : 'user/update-profile',
     getReferralCode : 'referral/listing',

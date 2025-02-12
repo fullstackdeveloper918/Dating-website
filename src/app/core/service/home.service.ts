@@ -11,6 +11,6 @@ export class HomeService {
 
   // GET USERS
   getUsers(){
-    return this._apiService.getAll(apiRoutes.userList)
+    return this._apiService.getAll(apiRoutes.userAllList)
   }
 }
