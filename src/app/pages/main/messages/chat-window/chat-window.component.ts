@@ -157,9 +157,9 @@ export class ChatWindowComponent {
       setTimeout(() => {
         this.scroll.nativeElement.scrollTo({
           top: this.scroll.nativeElement.scrollHeight,
-          behavior: 'smooth' // Enables smooth scrolling
+          behavior: 'smooth'
         });
-      }, 2000); // Small delay ensures the DOM is updated
+      }, 1000); 
     }
   }
 
@@ -175,6 +175,7 @@ export class ChatWindowComponent {
 
     // RECONNECT SOCKET WHEN SWITCHING USERS
     reconnectSocket() {
+      this.messageHistory();
       console.log('Reconnecting socket for new chat...');
       // Step 1: Disconnect current socket
       this.chatService.disconnect();
@@ -183,7 +184,6 @@ export class ChatWindowComponent {
         this.chatService.connect();
         this.chatService.registerUser(this.currentUser);
         // this.listenForMessages();
-        this.messageHistory();
       }, 2000); 
     }
 
